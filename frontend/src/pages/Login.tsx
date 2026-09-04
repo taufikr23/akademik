@@ -20,11 +20,12 @@ export default function Login() {
     setLoading(true);
     try {
       const res = await authService.login(username, password);
-      if (res.success && res.data.token) {
-        login(res.data.token, { id: 0, username: res.data.username, role: res.data.role, isActive: res.data.isActive });
-        navigate(getDashboardPath(res.data.role));
+      const d = res?.data || res;
+      if (d?.token) {
+        login(d.token, { id: d.id || 0, username: d.username, role: d.role, isActive: d.isActive });
+        navigate(getDashboardPath(d.role));
       } else {
-        setError(res.message || 'Login gagal');
+        setError(res?.message || 'Login gagal');
       }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Terjadi kesalahan');
@@ -81,7 +82,7 @@ export default function Login() {
               <input
                 type="text"
                 className="input-field"
-                placeholder="Masukkan username"
+                placeholder="Username / NIS / NIP"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -109,7 +110,7 @@ export default function Login() {
           </form>
 
           <p className="text-sm text-gray-500 mt-6 text-center">
-            Belum punya akun?{' '}
+            Belum punya akun?{" "}
             <Link to="/register" className="text-primary-600 hover:text-primary-700 font-medium">Daftar sekarang</Link>
           </p>
         </div>

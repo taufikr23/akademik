@@ -1,12 +1,13 @@
 import { type ReactNode } from 'react';
 
-interface Column<T> {
+export interface Column<T> {
   key?: string;
   label?: string;
   header?: string;
-  render?: (item: T) => ReactNode;
-  accessor?: string | ((row: T) => ReactNode);
+  render?: (item: T, index?: number) => ReactNode;
+  accessor?: string | ((row: T, index?: number) => ReactNode);
   className?: string;
+  width?: string;
 }
 
 interface Props<T> {
@@ -14,6 +15,7 @@ interface Props<T> {
   data: T[];
   loading?: boolean;
   emptyMessage?: string;
+  searchPlaceholder?: string;
 }
 
 export default function DataTable<T extends { id: number }>({ columns, data, loading, emptyMessage = 'Tidak ada data' }: Props<T>) {
@@ -33,9 +35,9 @@ export default function DataTable<T extends { id: number }>({ columns, data, loa
 
   const getHeader = (col: Column<T>) => col.label ?? col.header ?? '';
 
-  const renderCell = (col: Column<T>, item: T): ReactNode => {
-    if (col.render) return col.render(item);
-    if (typeof col.accessor === 'function') return col.accessor(item);
+  const renderCell = (col: Column<T>, item: T, index: number): ReactNode => {
+    if (col.render) return col.render(item, index);
+    if (typeof col.accessor === 'function') return col.accessor(item, index);
     const colKey = col.key ?? (typeof col.accessor === 'string' ? col.accessor : undefined);
     if (colKey) return String((item as Record<string, unknown>)[colKey] ?? '-');
     return '-';
@@ -48,7 +50,7 @@ export default function DataTable<T extends { id: number }>({ columns, data, loa
           <thead>
             <tr className="border-b border-gray-200 bg-gray-50/50">
               {columns.map((col, i) => (
-                <th key={getColKey(col, i)} className={`px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider ${col.className || ''}`}>
+                <th key={getColKey(col, i)} className={`px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider ${col.className || ''}`} style={col.width ? { width: col.width } : undefined}>
                   {getHeader(col)}
                 </th>
               ))}
@@ -62,11 +64,11 @@ export default function DataTable<T extends { id: number }>({ columns, data, loa
                 </td>
               </tr>
             ) : (
-              data.map((item) => (
+              data.map((item, index) => (
                 <tr key={item.id} className="hover:bg-gray-50/50 transition-colors">
                   {columns.map((col, i) => (
-                    <td key={getColKey(col, i)} className={`px-5 py-3.5 text-sm text-gray-700 ${col.className || ''}`}>
-                      {renderCell(col, item)}
+                    <td key={getColKey(col, i)} className={`px-5 py-3.5 text-sm text-gray-700 ${col.className || ''}`} style={col.width ? { width: col.width } : undefined}>
+                      {renderCell(col, item, index)}
                     </td>
                   ))}
                 </tr>

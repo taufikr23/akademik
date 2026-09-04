@@ -1,144 +1,133 @@
-import { useEffect, useState } from 'react';
-import { Calendar, ClipboardCheck, FileText, Award, Clock, BookMarked, Send, CreditCard } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  Calendar, ClipboardCheck, FileText, Award, Clock, BookOpen,
+} from 'lucide-react';
 import PageHeader from '../../components/PageHeader';
-import { scheduleService } from '../../services/scheduleService';
-import { attendanceService } from '../../services/attendanceService';
-import { assignmentService } from '../../services/assignmentService';
-import { gradeService } from '../../services/gradeService';
+import { teacherSubjectService } from '../../services/academicService';
 import { useAuth } from '../../context/AuthContext';
 
-interface StatCardProps {
-  icon: React.ReactNode;
-  label: string;
-  value: number;
-  color: string;
+interface TodaySchedule {
+  id: number;
+  className: string;
+  teacherName: string;
+  subjectName: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+  room: string;
 }
 
-function StatCard({ icon, label, value, color }: StatCardProps) {
-  return (
-    <div className="card flex items-center gap-4">
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color}`}>
-        {icon}
-      </div>
-      <div>
-        <p className="text-2xl font-bold text-gray-900">{value}</p>
-        <p className="text-sm text-gray-500">{label}</p>
-      </div>
-    </div>
-  );
-}
+const dayColors: Record<number, string> = {
+  1: 'border-blue-500 bg-blue-50',
+  2: 'border-emerald-500 bg-emerald-50',
+  3: 'border-yellow-500 bg-yellow-50',
+  4: 'border-purple-500 bg-purple-50',
+  5: 'border-red-500 bg-red-50',
+  6: 'border-indigo-500 bg-indigo-50',
+};
+
+const quickLinks = [
+  { label: 'Jadwal Pelajaran', path: '/operational/schedules', icon: <Calendar size={24} />, color: 'bg-blue-500' },
+  { label: 'Presensi Saya', path: '/operational/attendance', icon: <ClipboardCheck size={24} />, color: 'bg-orange-500' },
+  { label: 'Tugas Saya', path: '/operational/assignments', icon: <FileText size={24} />, color: 'bg-teal-500' },
+  { label: 'Nilai Saya', path: '/operational/grades', icon: <Award size={24} />, color: 'bg-red-500' },
+];
 
 export default function StudentDashboard() {
   const { user } = useAuth();
-  const [stats, setStats] = useState({
-    schedules: 0, attendance: 0, assignments: 0, grades: 0,
-  });
+  const [todaySchedule, setTodaySchedule] = useState<TodaySchedule[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadStats = async () => {
-      try {
-        const [schedules, attendance, assignments, grades] = await Promise.allSettled([
-          scheduleService.getSchedules(),
-          attendanceService.getAttendances(),
-          assignmentService.getAssignments(),
-          gradeService.getGrades(),
-        ]);
-        setStats({
-          schedules: schedules.status === 'fulfilled' ? schedules.value.data.length : 0,
-          attendance: attendance.status === 'fulfilled' ? attendance.value.data.length : 0,
-          assignments: assignments.status === 'fulfilled' ? assignments.value.data.length : 0,
-          grades: grades.status === 'fulfilled' ? grades.value.data.length : 0,
-        });
-      } catch {}
-      setLoading(false);
-    };
-    loadStats();
+    loadTodaySchedule();
   }, []);
+
+  const loadTodaySchedule = async () => {
+    setLoading(true);
+    try {
+      const today = new Date().getDay();
+      const dayOfWeek = today === 0 ? 7 : today;
+      // Get student's classId
+      let schedules: any[] = [];
+      try {
+        const studentRes = await import('../../api/client').then(m => m.default.get('/api/students'));
+        const students = Array.isArray(studentRes.data) ? studentRes.data : [];
+        const myStudent = students.find((s: any) => s.nis === user?.username || s.userId === user?.id);
+        if (myStudent?.classId) {
+          const sRes = await teacherSubjectService.getByClass(myStudent.classId);
+          schedules = Array.isArray(sRes.data) ? sRes.data : [];
+        }
+      } catch (e) {
+        console.error('Could not fetch student class:', e);
+      }
+      const todaySchedules = schedules
+        .filter((s: any) => s.dayOfWeek === dayOfWeek && s.isActive)
+        .sort((a: any, b: any) => (a.startTime || '').localeCompare(b.startTime || ''));
+      setTodaySchedule(todaySchedules);
+    } catch (e) {
+      console.error('Failed to load schedule:', e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div>
-      <PageHeader title="Dashboard Siswa" subtitle={`Selamat datang, ${user?.username}`} />
+      <PageHeader title="Dashboard Siswa" subtitle={`Selamat datang, ${user?.username || 'Siswa'}!`} />
 
-      {loading ? (
-        <div className="flex items-center justify-center py-20">
-          <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin" />
+      {/* Quick Links */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        {quickLinks.map((link) => (
+          <Link
+            key={link.path}
+            to={link.path}
+            className="flex flex-col items-center p-5 bg-white rounded-xl shadow hover:shadow-md transition-all hover:scale-105"
+          >
+            <div className={`${link.color} text-white p-3 rounded-full mb-3`}>
+              {link.icon}
+            </div>
+            <span className="text-sm font-medium text-gray-700 text-center">{link.label}</span>
+          </Link>
+        ))}
+      </div>
+
+      {/* Today's Schedule - from database */}
+      <div className="bg-white rounded-xl shadow p-6 mb-6">
+        <div className="flex items-center gap-3 mb-4">
+          <Clock size={20} className="text-blue-600" />
+          <h3 className="text-lg font-semibold text-gray-900">Jadwal Hari Ini</h3>
         </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <StatCard icon={<Calendar size={24} className="text-blue-600" />} label="Jadwal Hari Ini" value={stats.schedules} color="bg-blue-50" />
-            <StatCard icon={<ClipboardCheck size={24} className="text-emerald-600" />} label="Kehadiran" value={stats.attendance} color="bg-emerald-50" />
-            <StatCard icon={<FileText size={24} className="text-orange-600" />} label="Tugas Diberikan" value={stats.assignments} color="bg-orange-50" />
-            <StatCard icon={<Award size={24} className="text-rose-600" />} label="Nilai Diterima" value={stats.grades} color="bg-rose-50" />
+        {loading ? (
+          <div className="flex items-center justify-center py-8">
+            <div className='w-6 h-6 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin' />
           </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="card">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Aktivitas Hari Ini</h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
-                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Clock size={16} className="text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">Jadwal Pelajaran</p>
-                    <p className="text-xs text-gray-500">Lihat jadwal pelajaran hari ini</p>
-                  </div>
+        ) : todaySchedule.length === 0 ? (
+          <div className="text-center py-8">
+            <Calendar size={40} className="text-gray-300 mx-auto mb-3" />
+            <p className="text-gray-500">Tidak ada jadwal hari ini</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {todaySchedule.map(s => (
+              <div key={s.id} className={`flex items-center p-4 border-l-4 rounded-lg ${dayColors[s.dayOfWeek] || 'border-gray-400 bg-gray-50'}`}>
+                <div className="text-center min-w-[80px]">
+                  <p className="text-sm font-bold text-gray-900">{s.startTime}</p>
+                  <p className="text-xs text-gray-400">s/d</p>
+                  <p className="text-sm font-bold text-gray-900">{s.endTime}</p>
                 </div>
-                <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
-                  <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <FileText size={16} className="text-orange-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">Kumpulkan Tugas</p>
-                    <p className="text-xs text-gray-500">Lihat dan kumpulkan tugas</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg">
-                  <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
-                    <ClipboardCheck size={16} className="text-emerald-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">Presensi</p>
-                    <p className="text-xs text-gray-500">Lihat riwayat kehadiran</p>
-                  </div>
+                <div className="ml-4 flex-1">
+                  <p className="font-semibold text-gray-900 flex items-center gap-2">
+                    <BookOpen size={14} className="text-gray-400" />
+                    {s.subjectName || 'Mapel'}
+                  </p>
+                  <p className="text-sm text-gray-500">Guru: {s.teacherName || '-'} | Ruang: {s.room || '-'}</p>
                 </div>
               </div>
-            </div>
-
-            <div className="card">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Menu Siswa</h3>
-              <div className="grid grid-cols-2 gap-3">
-                <a href="/schedules" className="p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors text-center">
-                  <Calendar size={20} className="text-blue-600 mx-auto mb-1" />
-                  <p className="text-sm font-medium text-blue-900">Jadwal</p>
-                </a>
-                <a href="/assignments" className="p-3 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors text-center">
-                  <FileText size={20} className="text-orange-600 mx-auto mb-1" />
-                  <p className="text-sm font-medium text-orange-900">Tugas</p>
-                </a>
-                <a href="/grades" className="p-3 bg-violet-50 rounded-lg hover:bg-violet-100 transition-colors text-center">
-                  <Award size={20} className="text-violet-600 mx-auto mb-1" />
-                  <p className="text-sm font-medium text-violet-900">Nilai</p>
-                </a>
-                <a href="/students/report-card" className="p-3 bg-rose-50 rounded-lg hover:bg-rose-100 transition-colors text-center">
-                  <CreditCard size={20} className="text-rose-600 mx-auto mb-1" />
-                  <p className="text-sm font-medium text-rose-900">Rapor</p>
-                </a>
-                <a href="/attendance" className="p-3 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors text-center">
-                  <ClipboardCheck size={20} className="text-emerald-600 mx-auto mb-1" />
-                  <p className="text-sm font-medium text-emerald-900">Presensi</p>
-                </a>
-                <a href="/students/materials" className="p-3 bg-teal-50 rounded-lg hover:bg-teal-100 transition-colors text-center">
-                  <BookMarked size={20} className="text-teal-600 mx-auto mb-1" />
-                  <p className="text-sm font-medium text-teal-900">Materi</p>
-                </a>
-              </div>
-            </div>
+            ))}
           </div>
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 }

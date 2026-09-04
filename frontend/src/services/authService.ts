@@ -1,24 +1,33 @@
 import api from '../api/client';
 import type { ApiResponse, AuthResponse } from '../types';
 
-export const authService = { 
+export const authService = {
   login: async (username: string, password: string) => {
-    const res = await api.post<ApiResponse<AuthResponse>>('/api/v1/auth/login', { username, password });
+    const res = await api.post<ApiResponse<AuthResponse>>('/api/auth/login', { username, password });
     return res.data;
   },
-
-  register: async (username: string, password: string, role: string) => {
-    const res = await api.post<ApiResponse<AuthResponse>>('/api/v1/auth/register', { username, password, role });
+  register: async (data: any) => {
+    const res = await api.post<ApiResponse<AuthResponse>>('/api/auth/register', data);
     return res.data;
   },
-
-  activate: async (username: string, activationCode: string, newPassword: string) => {
-    const res = await api.post<ApiResponse<AuthResponse>>('/api/v1/auth/activate', { username, activationCode, newPassword });
+  activate: async (token: string, username: string, newPassword: string) => {
+    const res = await api.post<ApiResponse<AuthResponse>>('/api/auth/activate', { token, username, newPassword });
     return res.data;
   },
-
+  getPendingRegistrations: async () => {
+    const res = await api.get<ApiResponse<any[]>>('/api/auth/admin/approvals/pending');
+    return res.data;
+  },
+  approveUser: async (userId: number) => {
+    const res = await api.post<ApiResponse<any>>('/api/auth/admin/approvals/' + userId + '/approve');
+    return res.data;
+  },
+  rejectUser: async (userId: number) => {
+    const res = await api.post<ApiResponse<any>>('/api/auth/admin/approvals/' + userId + '/reject');
+    return res.data;
+  },
   me: async () => {
-    const res = await api.get<ApiResponse<AuthResponse>>('/api/v1/auth/me');
+    const res = await api.get<ApiResponse<AuthResponse>>('/api/auth/me');
     return res.data;
   },
 };

@@ -19,9 +19,10 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => {
-    const url = response.config.url || '';
-    if (!url.includes('/auth/')) {
-      response.data = response.data?.data ?? response.data;
+    // Auto-unwrap ApiResponse: { success, message, data, timestamp } → return data directly
+    const body = response.data;
+    if (body && typeof body === 'object' && 'success' in body && 'data' in body) {
+      response.data = body.data;
     }
     return response;
   },

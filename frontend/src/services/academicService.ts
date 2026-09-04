@@ -1,50 +1,181 @@
-import api from '../api/client';
-import type { ApiResponse, AcademicYear, Semester, Department, ClassRoom, Teacher, Subject, TeacherSubject, HomeroomTeacher } from '../types';
+import client from '../api/client';
 
+// ============================================
+// BACKWARD COMPATIBLE SERVICE
+// ============================================
 export const academicService = {
-  getAcademicYears: () => api.get<ApiResponse<AcademicYear[]>>('/api/v1/academic-years').then(r => r.data),
-  getActiveAcademicYears: () => api.get<ApiResponse<AcademicYear[]>>('/api/v1/academic-years/active').then(r => r.data),
-  getAcademicYear: (id: number) => api.get<ApiResponse<AcademicYear>>(`/api/v1/academic-years/${id}`).then(r => r.data),
-  createAcademicYear: (data: { yearName: string }) => api.post<ApiResponse<AcademicYear>>('/api/v1/academic-years', data).then(r => r.data),
-  updateAcademicYear: (id: number, data: { yearName: string }) => api.put<ApiResponse<AcademicYear>>(`/api/v1/academic-years/${id}`, data).then(r => r.data),
-  deleteAcademicYear: (id: number) => api.delete(`/api/v1/academic-years/${id}`),
+  // Academic Years
+  getAcademicYears: () => academicYearService.getAll(),
+  createAcademicYear: (data: any) => academicYearService.create(data),
+  updateAcademicYear: (id: number, data: any) => academicYearService.update(id, data),
+  deleteAcademicYear: (id: number) => academicYearService.delete(id),
+  
+  // Semesters
+  getSemesters: () => semesterService.getAll(),
+  createSemester: (data: any) => semesterService.create(data),
+  updateSemester: (id: number, data: any) => semesterService.update(id, data),
+  deleteSemester: (id: number) => semesterService.delete(id),
+  
+  // Departments
+  getDepartments: () => departmentService.getAll(),
+  createDepartment: (data: any) => departmentService.create(data),
+  updateDepartment: (id: number, data: any) => departmentService.update(id, data),
+  deleteDepartment: (id: number) => departmentService.delete(id),
+  
+  // Classes
+  getClasses: () => classService.getAll(),
+  createClass: (data: any) => classService.create(data),
+  updateClass: (id: number, data: any) => classService.update(id, data),
+  deleteClass: (id: number) => classService.delete(id),
+  
+  // Subjects
+  getSubjects: () => subjectService.getAll(),
+  createSubject: (data: any) => subjectService.create(data),
+  updateSubject: (id: number, data: any) => subjectService.update(id, data),
+  deleteSubject: (id: number) => subjectService.delete(id),
+  
+  // Teachers
+  getTeachers: () => teacherService.getAll(),
+  createTeacher: (data: any) => teacherService.create(data),
+  updateTeacher: (id: number, data: any) => teacherService.update(id, data),
+  deleteTeacher: (id: number) => teacherService.delete(id),
+  
+  // Students
+  getStudents: () => studentService.getAll(),
+  createStudent: (data: any) => studentService.create(data),
+  updateStudent: (id: number, data: any) => studentService.update(id, data),
+  deleteStudent: (id: number) => studentService.delete(id),
+  
+  // Teacher Subjects
+  getTeacherSubjects: () => teacherSubjectService.getAll(),
+  createTeacherSubject: (data: any) => teacherSubjectService.create(data),
+  updateTeacherSubject: (id: number, data: any) => teacherSubjectService.update(id, data),
+  deleteTeacherSubject: (id: number) => teacherSubjectService.delete(id),
+  
+  // Homeroom Teachers
+  getHomeroomTeachers: () => homeroomTeacherService.getAll(),
+  createHomeroomTeacher: (data: any) => homeroomTeacherService.create(data),
+  updateHomeroomTeacher: (id: number, data: any) => homeroomTeacherService.update(id, data),
+  deleteHomeroomTeacher: (id: number) => homeroomTeacherService.delete(id),
+  
+  // Enrollments
+  getEnrollments: () => enrollmentService.getAll(),
+  createEnrollment: (data: any) => enrollmentService.create(data),
+  updateEnrollment: (id: number, data: any) => enrollmentService.update(id, data),
+  deleteEnrollment: (id: number) => enrollmentService.delete(id),
+  
+  // Grades
+  getGrades: () => gradeService.getAll(),
+  createGrade: (data: any) => gradeService.create(data),
+  updateGrade: (id: number, data: any) => gradeService.update(id, data),
+  deleteGrade: (id: number) => gradeService.delete(id),
+};
 
-  getSemesters: () => api.get<ApiResponse<Semester[]>>('/api/v1/semesters').then(r => r.data),
-  getSemestersByYear: (yearId: number) => api.get<ApiResponse<Semester[]>>(`/api/v1/semesters/academic-year/${yearId}`).then(r => r.data),
-  createSemester: (data: { academicYearId: number; semesterType: string }) => api.post<ApiResponse<Semester>>('/api/v1/semesters', data).then(r => r.data),
-  updateSemester: (id: number, data: { academicYearId: number; semesterType: string }) => api.put<ApiResponse<Semester>>(`/api/v1/semesters/${id}`, data).then(r => r.data),
-  deleteSemester: (id: number) => api.delete(`/api/v1/semesters/${id}`),
+// ============================================
+// MASTER DATA SERVICE
+// ============================================
 
-  getDepartments: () => api.get<ApiResponse<Department[]>>('/api/v1/departments').then(r => r.data),
-  getActiveDepartments: () => api.get<ApiResponse<Department[]>>('/api/v1/departments/active').then(r => r.data),
-  createDepartment: (data: { code: string; name: string; description?: string }) => api.post<ApiResponse<Department>>('/api/v1/departments', data).then(r => r.data),
-  updateDepartment: (id: number, data: { code: string; name: string; description?: string }) => api.put<ApiResponse<Department>>(`/api/v1/departments/${id}`, data).then(r => r.data),
-  deleteDepartment: (id: number) => api.delete(`/api/v1/departments/${id}`),
+// Tahun Ajaran
+export const academicYearService = {
+  getAll: () => client.get('/api/academic-years'),
+  getById: (id: number) => client.get(`/api/academic-years/${id}`),
+  create: (data: any) => client.post('/api/academic-years', data),
+  update: (id: number, data: any) => client.put(`/api/academic-years/${id}`, data),
+  delete: (id: number) => client.delete(`/api/academic-years/${id}`),
+};
 
-  getClasses: () => api.get<ApiResponse<ClassRoom[]>>('/api/v1/classes').then(r => r.data),
-  getClassesByDept: (deptId: number) => api.get<ApiResponse<ClassRoom[]>>(`/api/v1/classes/department/${deptId}`).then(r => r.data),
-  createClass: (data: { name: string; departmentId: number; gradeLevel: number; academicYearId?: number }) => api.post<ApiResponse<ClassRoom>>('/api/v1/classes', data).then(r => r.data),
-  updateClass: (id: number, data: { name: string; departmentId: number; gradeLevel: number; academicYearId?: number }) => api.put<ApiResponse<ClassRoom>>(`/api/v1/classes/${id}`, data).then(r => r.data),
-  deleteClass: (id: number) => api.delete(`/api/v1/classes/${id}`),
+// Semester
+export const semesterService = {
+  getAll: () => client.get('/api/semesters'),
+  getById: (id: number) => client.get(`/api/semesters/${id}`),
+  create: (data: any) => client.post('/api/semesters', data),
+  update: (id: number, data: any) => client.put(`/api/semesters/${id}`, data),
+  delete: (id: number) => client.delete(`/api/semesters/${id}`),
+};
 
-  getTeachers: () => api.get<ApiResponse<Teacher[]>>('/api/v1/teachers').then(r => r.data),
-  getActiveTeachers: () => api.get<ApiResponse<Teacher[]>>('/api/v1/teachers/active').then(r => r.data),
-  createTeacher: (data: Omit<Teacher, 'id' | 'isActive' | 'createdAt' | 'updatedAt'>) => api.post<ApiResponse<Teacher>>('/api/v1/teachers', data).then(r => r.data),
-  updateTeacher: (id: number, data: Omit<Teacher, 'id' | 'isActive' | 'createdAt' | 'updatedAt'>) => api.put<ApiResponse<Teacher>>(`/api/v1/teachers/${id}`, data).then(r => r.data),
-  deleteTeacher: (id: number) => api.delete(`/api/v1/teachers/${id}`),
+// Jurusan (Departments)
+export const departmentService = {
+  getAll: () => client.get('/api/departments'),
+  getById: (id: number) => client.get(`/api/departments/${id}`),
+  create: (data: any) => client.post('/api/departments', data),
+  update: (id: number, data: any) => client.put(`/api/departments/${id}`, data),
+  delete: (id: number) => client.delete(`/api/departments/${id}`),
+};
 
-  getSubjects: () => api.get<ApiResponse<Subject[]>>('/api/v1/subjects').then(r => r.data),
-  getActiveSubjects: () => api.get<ApiResponse<Subject[]>>('/api/v1/subjects/active').then(r => r.data),
-  createSubject: (data: { code: string; name: string; description?: string; creditHours?: number }) => api.post<ApiResponse<Subject>>('/api/v1/subjects', data).then(r => r.data),
-  updateSubject: (id: number, data: { code: string; name: string; description?: string; creditHours?: number }) => api.put<ApiResponse<Subject>>(`/api/v1/subjects/${id}`, data).then(r => r.data),
-  deleteSubject: (id: number) => api.delete(`/api/v1/subjects/${id}`),
+// Kelas
+export const classService = {
+  getAll: () => client.get('/api/classes'),
+  getById: (id: number) => client.get(`/api/classes/${id}`),
+  create: (data: any) => client.post('/api/classes', data),
+  update: (id: number, data: any) => client.put(`/api/classes/${id}`, data),
+  delete: (id: number) => client.delete(`/api/classes/${id}`),
+};
 
-  getTeacherSubjects: () => api.get<ApiResponse<TeacherSubject[]>>('/api/v1/teacher-subjects').then(r => r.data),
-  createTeacherSubject: (data: { teacherId: number; subjectId: number; academicYearId: number }) => api.post<ApiResponse<TeacherSubject>>('/api/v1/teacher-subjects', data).then(r => r.data),
-  deleteTeacherSubject: (id: number) => api.delete(`/api/v1/teacher-subjects/${id}`),
+// Mata Pelajaran
+export const subjectService = {
+  getAll: () => client.get('/api/subjects'),
+  getById: (id: number) => client.get(`/api/subjects/${id}`),
+  create: (data: any) => client.post('/api/subjects', data),
+  update: (id: number, data: any) => client.put(`/api/subjects/${id}`, data),
+  delete: (id: number) => client.delete(`/api/subjects/${id}`),
+};
 
-  getHomeroomTeachers: () => api.get<ApiResponse<HomeroomTeacher[]>>('/api/v1/homeroom-teachers').then(r => r.data),
-  createHomeroomTeacher: (data: { teacherId: number; classId: number; academicYearId: number }) => api.post<ApiResponse<HomeroomTeacher>>('/api/v1/homeroom-teachers', data).then(r => r.data),
-  updateHomeroomTeacher: (id: number, data: { teacherId: number; classId: number; academicYearId: number }) => api.put<ApiResponse<HomeroomTeacher>>(`/api/v1/homeroom-teachers/${id}`, data).then(r => r.data),
-  deleteHomeroomTeacher: (id: number) => api.delete(`/api/v1/homeroom-teachers/${id}`),
+// Guru
+export const teacherService = {
+  getAll: () => client.get('/api/teachers'),
+  getById: (id: number) => client.get(`/api/teachers/${id}`),
+  create: (data: any) => client.post('/api/teachers', data),
+  update: (id: number, data: any) => client.put(`/api/teachers/${id}`, data),
+  delete: (id: number) => client.delete(`/api/teachers/${id}`),
+};
+
+// Siswa
+export const studentService = {
+  getAll: () => client.get('/api/students'),
+  getById: (id: number) => client.get(`/api/students/${id}`),
+  create: (data: any) => client.post('/api/students', data),
+  update: (id: number, data: any) => client.put(`/api/students/${id}`, data),
+  delete: (id: number) => client.delete(`/api/students/${id}`),
+};
+
+// Guru & Mata Pelajaran (Penugasan)
+export const teacherSubjectService = {
+  getAll: () => client.get('/api/teacher-subjects'),
+  getById: (id: number) => client.get(`/api/teacher-subjects/${id}`),
+  getByClass: (classId: number) => client.get(`/api/teacher-subjects/class/${classId}`),
+  getByTeacher: (teacherId: number) => client.get(`/api/teacher-subjects/teacher/${teacherId}`),
+  create: (data: any) => client.post('/api/teacher-subjects', data),
+  update: (id: number, data: any) => client.put(`/api/teacher-subjects/${id}`, data),
+  delete: (id: number) => client.delete(`/api/teacher-subjects/${id}`),
+};
+
+// Wali Kelas
+export const homeroomTeacherService = {
+  getAll: () => client.get('/api/homeroom-teachers'),
+  getById: (id: number) => client.get(`/api/homeroom-teachers/${id}`),
+  create: (data: any) => client.post('/api/homeroom-teachers', data),
+  update: (id: number, data: any) => client.put(`/api/homeroom-teachers/${id}`, data),
+  delete: (id: number) => client.delete(`/api/homeroom-teachers/${id}`),
+};
+
+// Enrollment (Pendaftaran Siswa)
+export const enrollmentService = {
+  getAll: () => client.get('/api/enrollments'),
+  getById: (id: number) => client.get(`/api/enrollments/${id}`),
+  create: (data: any) => client.post('/api/enrollments', data),
+  update: (id: number, data: any) => client.put(`/api/enrollments/${id}`, data),
+  delete: (id: number) => client.delete(`/api/enrollments/${id}`),
+};
+
+// Nilai (Grade)
+export const gradeService = {
+  getAll: () => client.get('/api/grades'),
+  getById: (id: number) => client.get(`/api/grades/${id}`),
+  create: (data: any) => client.post('/api/grades', data),
+  update: (id: number, data: any) => client.put(`/api/grades/${id}`, data),
+  delete: (id: number) => client.delete(`/api/grades/${id}`),
+  getByStudent: (studentId: number) => client.get(`/api/grades/student/${studentId}`),
+  getByClass: (classId: number) => client.get(`/api/grades/class/${classId}`),
+  getBySubject: (subjectId: number) => client.get(`/api/grades/subject/${subjectId}`),
+  getBySemester: (semesterId: number) => client.get(`/api/grades/semester/${semesterId}`),
 };

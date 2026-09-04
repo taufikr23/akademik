@@ -18,7 +18,7 @@ services:
       retries: 5
 
   api-gateway:
-    build: ./api-gateway
+    build: ./backend/api-gateway
     container_name: siasek-api-gateway
     ports:
       - "8080:8080"
@@ -31,7 +31,7 @@ services:
       - siasek-network
 
   academic-service:
-    build: ./backend
+    build: ./backend/academic-service
     container_name: siasek-academic-service
     ports:
       - "8081:8081"
@@ -46,7 +46,7 @@ services:
       - siasek-network
 
   auth-service:
-    build: ./auth-service
+    build: ./backend/auth-service
     container_name: siasek-auth-service
     ports:
       - "8082:8082"
@@ -59,11 +59,19 @@ services:
       - SPRING_DATASOURCE_PASSWORD=
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_FROM=${MAIL_FROM}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - STUDENT_SERVICE_URL=http://student-service:8083
+      - TEACHER_SERVICE_URL=http://academic-service:8081
     networks:
       - siasek-network
 
   student-service:
-    build: ./student-service
+    build: ./backend/student-service
     container_name: siasek-student-service
     ports:
       - "8083:8083"
@@ -78,7 +86,7 @@ services:
       - siasek-network
 
   schedule-service:
-    build: ./schedule-service
+    build: ./backend/schedule-service
     container_name: siasek-schedule-service
     ports:
       - "8084:8084"
@@ -93,7 +101,7 @@ services:
       - siasek-network
 
   attendance-service:
-    build: ./attendance-service
+    build: ./backend/attendance-service
     container_name: siasek-attendance-service
     ports:
       - "8085:8085"
@@ -108,7 +116,7 @@ services:
       - siasek-network
 
   assignment-service:
-    build: ./assignment-service
+    build: ./backend/assignment-service
     container_name: siasek-assignment-service
     ports:
       - "8086:8086"
@@ -119,11 +127,14 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}?useSSL=false&serverTimezone=Asia/Jakarta&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
       - SPRING_DATASOURCE_PASSWORD=
+      - UPLOAD_DIR=/data/uploads
+    volumes:
+      - assignment-uploads:/data/uploads
     networks:
       - siasek-network
 
   grade-service:
-    build: ./grade-service
+    build: ./backend/grade-service
     container_name: siasek-grade-service
     ports:
       - "8087:8087"
@@ -154,3 +165,4 @@ networks:
 
 volumes:
   mysql-data:
+  assignment-uploads:

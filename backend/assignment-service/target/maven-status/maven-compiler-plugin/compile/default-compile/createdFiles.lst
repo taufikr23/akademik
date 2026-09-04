@@ -1,0 +1,6 @@
+com\taufik\assignment\dto\response\SubmissionResponse$SubmissionResponseBuilder.class
+com\taufik\assignment\dto\request\SubmissionRequest.class
+com\taufik\assignment\dto\response\SubmissionResponse.class
+com\taufik\assignment\repository\SubmissionRepository.class
+com\taufik\assignment\dto\request\SubmissionRequest$SubmissionRequestBuilder.class
+com\taufik\assignment\model\AssignmentSubmission.class

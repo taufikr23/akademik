@@ -1,0 +1,38 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: backend-service
+          uri: http://academic-service:8081
+          predicates:
+            - Path=/api/academic-years/**,/api/classes/**,/api/departments/**,/api/semesters/**,/api/subjects/**,/api/teachers/**,/api/teacher-subjects/**,/api/homeroom-teachers/**
+        - id: auth-service
+          uri: http://auth-service:8082
+          predicates:
+            - Path=/api/auth/**
+        - id: student-service
+          uri: http://student-service:8083
+          predicates:
+            - Path=/api/students/**,/api/enrollments/**
+        - id: schedule-service
+          uri: http://schedule-service:8084
+          predicates:
+            - Path=/api/schedules/**,/api/events/**
+        - id: attendance-service
+          uri: http://attendance-service:8085
+          predicates:
+            - Path=/api/attendance/**
+        - id: assignment-service
+          uri: http://assignment-service:8086
+          predicates:
+            - Path=/api/assignment/**
+        - id: grade-service
+          uri: http://grade-service:8087
+          predicates:
+            - Path=/api/grades/**
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"

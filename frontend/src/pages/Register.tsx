@@ -1,137 +1,294 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { BookOpen, Eye, EyeOff, KeyRound } from 'lucide-react';
+import { BookOpen, Eye, EyeOff, GraduationCap, Users } from 'lucide-react';
 import { authService } from '../services/authService';
+import { academicService } from '../services/academicService';
+
+const DEPARTMENTS = [
+  { id: 1, name: 'TITL', fullName: 'Teknik Instalasi Tenaga Listrik' },
+  { id: 2, name: 'TSM', fullName: 'Teknik Sepeda Motor' },
+  { id: 3, name: 'DPIB', fullName: 'Desain Pemodelan dan Informasi Bangunan' },
+  { id: 4, name: 'TKP', fullName: 'Teknik Konstruksi dan Perumahan' },
+  { id: 5, name: 'APAT', fullName: 'Agribisnis Perikanan Air Tawar' },
+  { id: 6, name: 'TKR', fullName: 'Teknik Kendaraan Ringan' },
+  { id: 7, name: 'TKPI', fullName: 'Teknik Kapal Penangkap Ikan' },
+  { id: 8, name: 'NKPI', fullName: 'Nautika Kapal Penangkap Ikan' },
+];
+
+const inputCls = 'w-full border-2 border-primary-400 rounded-xl px-3 py-2.5 text-sm bg-white text-gray-900 placeholder-gray-400 focus:border-primary-600 focus:ring-2 focus:ring-primary-200 outline-none transition-all duration-200';
+const labelCls = 'block text-sm font-semibold text-gray-700 mb-1.5';
+const TRANSITION = 'transform 700ms cubic-bezier(0.4, 0, 0.2, 1)';
 
 export default function Register() {
   const navigate = useNavigate();
-  const [step, setStep] = useState<'register' | 'activate'>('register');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState('SISWA');
-  const [activationCode, setActivationCode] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState<'role' | 'form'>('role');
+  const [role, setRole] = useState<'SISWA' | 'GURU'>('SISWA');
+  const [f, setF] = useState({ nis: '', nisn: '', name: '', gender: 'LAKI_LAKI', dob: '', phone: '', addr: '', email: '', dept: '', cls: '', pass: '', pass2: '' });
+  const [showP, setShowP] = useState(false);
+  const [err, setErr] = useState('');
+  const [load, setLoad] = useState(false);
+  const [ok, setOk] = useState(false);
+  const [contentFade, setContentFade] = useState(true);
+  const [formSlideIn, setFormSlideIn] = useState(false);
+  const [classes, setClasses] = useState<{id:number;name:string;departmentId:number}[]>([]);
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    try {
-      const res = await authService.register(username, password, role);
-      if (res.success) {
-        setMessage(res.message);
-        setStep('activate');
-      } else {
-        setError(res.message);
-      }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Terjadi kesalahan');
-    } finally {
-      setLoading(false);
+  const il = role === 'SISWA';
+
+  // Load classes
+  useEffect(() => {
+    academicService.getClasses().then(res => {
+      const data = Array.isArray(res.data) ? res.data : [];
+      setClasses(data);
+    }).catch(() => {});
+  }, []);
+
+  // Slide form in on first render
+  useEffect(() => {
+    if (step === 'form') {
+      const t = setTimeout(() => setFormSlideIn(true), 50);
+      return () => clearTimeout(t);
     }
+  }, [step]);
+
+  const W = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setF(p => ({ ...p, [k]: e.target.value }));
+
+  const handleRoleSelect = (r: 'SISWA' | 'GURU') => {
+    setRole(r);
+    setStep('form');
   };
 
-  const handleActivate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    try {
-      const res = await authService.activate(username, activationCode, newPassword);
-      if (res.success) {
-        navigate('/login');
-      } else {
-        setError(res.message);
-      }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Terjadi kesalahan');
-    } finally {
-      setLoading(false);
-    }
+  const handleBack = () => {
+    setFormSlideIn(false);
+    setTimeout(() => setStep('role'), 700);
   };
+
+  const handleRoleSwitch = (newRole: 'SISWA' | 'GURU') => {
+    if (newRole === role) return;
+    setContentFade(false);
+    setTimeout(() => {
+      setRole(newRole);
+      setF({ nis: '', nisn: '', name: '', gender: 'LAKI_LAKI', dob: '', phone: '', addr: '', email: '', dept: '', cls: '', pass: '', pass2: '' });
+      setErr('');
+      setContentFade(true);
+    }, 350);
+  };
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault(); setErr('');
+    if (f.pass !== f.pass2) { setErr('Password tidak cocok'); return; }
+    if (f.pass.length < 6) { setErr('Password minimal 6 karakter'); return; }
+    setLoad(true);
+    try {
+      await authService.register({
+        username: f.nis, nisn: role === 'SISWA' ? f.nisn : undefined, fullName: f.name,
+        gender: f.gender, dateOfBirth: f.dob || undefined, phone: f.phone || undefined,
+        address: f.addr || undefined, email: f.email,
+        departmentId: role === 'SISWA' && f.dept ? Number(f.dept) : undefined,
+        classId: role === 'SISWA' && f.cls ? Number(f.cls) : undefined,
+        role, password: f.pass,
+      });
+      setOk(true);
+    } catch (e: any) { setErr(e.response?.data?.message || e.message || 'Gagal mendaftar — periksa koneksi server'); }
+    finally { setLoad(false); }
+  };
+
+  // --- SUCCESS ---
+  if (ok) return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 text-center">
+        <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4"><span className="text-3xl">⏳</span></div>
+        <h2 className="text-xl font-bold text-gray-900 mb-2">Pendaftaran Berhasil!</h2>
+        <p className="text-gray-500 text-sm mb-1">Status: <strong>Menunggu Persetujuan Admin</strong></p>
+        <p className="text-gray-400 text-sm mb-6">Tunggu email notifikasi sebelum login.</p>
+        <button onClick={() => navigate('/login')} className="btn-primary w-full py-3 text-sm">Kembali ke Login</button>
+      </div>
+    </div>
+  );
+
+  // --- ROLE SELECTION ---
+  if (step === 'role') return (
+    <div className="min-h-screen flex">
+      <div className="hidden lg:flex lg:w-2/5 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 items-center justify-center p-8">
+        <div className="flex flex-col items-center text-center">
+          <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-sm">
+            <BookOpen size={32} className="text-white" />
+          </div>
+          <h1 className="text-3xl font-bold text-white mb-3">SIASEK</h1>
+          <p className="text-lg text-primary-100">Sistem Informasi Akademik Sekolah</p>
+          <p className="text-primary-200 mt-3 text-sm">Daftar sebagai Siswa atau Guru</p>
+        </div>
+      </div>
+      <div className="w-full lg:w-3/5 flex items-center justify-center p-6">
+        <div className="w-full max-w-md">
+          <h2 className="text-2xl font-bold text-gray-900 mb-1">Daftar Akun Baru</h2>
+          <p className="text-sm text-gray-500 mb-6">Pilih jenis akun</p>
+          <div className="space-y-3">
+            <button onClick={() => handleRoleSelect('SISWA')} className="w-full flex items-center gap-4 p-5 bg-white border-2 border-gray-200 rounded-xl hover:border-primary-500 transition-all">
+              <div className="w-14 h-14 bg-violet-100 rounded-xl flex items-center justify-center"><GraduationCap size={28} className="text-violet-600" /></div>
+              <div className="text-left">
+                <h3 className="font-semibold text-gray-900 text-lg">Siswa</h3>
+                <p className="text-sm text-gray-500">Daftar sebagai siswa baru SMK</p>
+              </div>
+            </button>
+            <button onClick={() => handleRoleSelect('GURU')} className="w-full flex items-center gap-4 p-5 bg-white border-2 border-gray-200 rounded-xl hover:border-primary-500 transition-all">
+              <div className="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center"><Users size={28} className="text-emerald-600" /></div>
+              <div className="text-left">
+                <h3 className="font-semibold text-gray-900 text-lg">Guru</h3>
+                <p className="text-sm text-gray-500">Daftar sebagai guru SMK</p>
+              </div>
+            </button>
+          </div>
+          <p className="text-sm text-gray-500 mt-6 text-center">
+            Sudah punya akun? <Link to="/login" className="text-primary-600 font-medium hover:underline">Masuk</Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+  // --- FORM with slide-swap animation ---
+  // SISWA: blue panel at left (0%-40%), form at right (40%-100%)
+  // GURU:  blue panel slides to right (60%-100%), form slides to left (0%-60%)
+  // Both use translateX to swap positions simultaneously
+
+  // Blue panel: left:0, w:40%. To move to right side (60%): translateX(150%) = 40%*150% = 60% offset
+  // Form panel: left:40%, w:60%. To move to left side (0%): translateX(-66.67%) = 60%*66.67% = 40% offset
+
+  const blueTransform = formSlideIn
+    ? (il ? 'translateX(0)' : 'translateX(150%)')
+    : 'translateX(-100%)';
+  const formTransform = formSlideIn
+    ? (il ? 'translateX(0)' : 'translateX(-66.67%)')
+    : 'translateX(100%)';
 
   return (
-    <div className="min-h-screen flex">
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-20 w-72 h-72 bg-white rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-white rounded-full blur-3xl" />
-        </div>
-        <div className="relative z-10 flex flex-col items-center justify-center w-full p-12">
-          <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mb-8 backdrop-blur-sm">
-            <BookOpen size={40} className="text-white" />
+    <div className="min-h-screen relative overflow-hidden bg-gray-50">
+      {/* Blue panel — absolute, left side, slides right when GURU */}
+      <div
+        className="hidden lg:flex absolute top-0 bottom-0 left-0 w-2/5 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 items-center justify-center p-8 z-0"
+        style={{ transform: blueTransform, transition: TRANSITION }}
+      >
+        <div className="flex flex-col items-center text-center">
+          <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-sm">
+            <BookOpen size={32} className="text-white" />
           </div>
-          <h1 className="text-4xl font-bold text-white mb-4">SIASEK</h1>
-          <p className="text-xl text-primary-100 text-center max-w-md">Sistem Informasi Akademik Sekolah</p>
+          <h1 className="text-3xl font-bold text-white mb-3">SIASEK</h1>
+          <p className="text-lg text-primary-100">{il ? 'Pendaftaran Siswa' : 'Pendaftaran Guru'}</p>
         </div>
       </div>
 
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="w-full max-w-md">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            {step === 'register' ? 'Buat Akun Baru' : 'Aktivasi Akun'}
-          </h2>
-          <p className="text-sm text-gray-500 mb-8">
-            {step === 'register' ? 'Isi data untuk mendaftar' : 'Masukkan kode aktivasi dari email'}
-          </p>
+      {/* Form panel — absolute, right side, slides left when GURU */}
+      <div
+        className="lg:absolute top-0 bottom-0 lg:left-[40%] lg:w-[60%] w-full bg-gray-50 flex items-center justify-center p-6 overflow-y-auto z-10"
+        style={{ transform: formTransform, transition: TRANSITION }}
+      >
+        <div className="w-full max-w-lg">
+          <button onClick={handleBack} className="text-sm text-gray-400 hover:text-gray-600 mb-3">← Kembali</button>
+          <h2 className="text-2xl font-bold text-gray-900 mb-1">{il ? 'Formulir Siswa' : 'Formulir Guru'}</h2>
+          <p className="text-sm text-gray-500 mb-4">Isi data lengkap untuk mendaftar</p>
 
-          {message && step === 'activate' && (
-            <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg mb-6 text-sm">{message}</div>
-          )}
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">{error}</div>
-          )}
+          {/* Role switch tabs */}
+          <div className="flex bg-gray-100 rounded-lg p-1 mb-4">
+            <button onClick={() => handleRoleSwitch('SISWA')} className={`flex-1 py-2 text-sm font-medium rounded-md transition-all duration-300 ${il ? 'bg-white text-primary-700 shadow' : 'text-gray-500 hover:text-gray-700'}`}>
+              Siswa
+            </button>
+            <button onClick={() => handleRoleSwitch('GURU')} className={`flex-1 py-2 text-sm font-medium rounded-md transition-all duration-300 ${!il ? 'bg-white text-primary-700 shadow' : 'text-gray-500 hover:text-gray-700'}`}>
+              Guru
+            </button>
+          </div>
 
-          {step === 'register' ? (
-            <form onSubmit={handleRegister} className="space-y-5">
-              <div>
-                <label className="label-field">Username</label>
-                <input type="text" className="input-field" placeholder="4-20 karakter" value={username} onChange={(e) => setUsername(e.target.value)} required minLength={4} maxLength={20} />
+          {err && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg mb-3 text-sm">{err}</div>}
+
+          <div className={`transition-all duration-300 ${contentFade ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}>
+            <form onSubmit={submit} className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className={labelCls}>{il ? 'NIS' : 'NIP'} *</label>
+                  <input type="text" className={inputCls} placeholder={il ? 'Nomor Induk Siswa' : 'Nomor Induk Pegawai'} value={f.nis} onChange={W('nis')} required />
+                </div>
+                {il && (
+                  <div>
+                    <label className={labelCls}>NISN *</label>
+                    <input type="text" className={inputCls} placeholder="Nomor Induk Siswa Nasional" value={f.nisn} onChange={W('nisn')} required />
+                  </div>
+                )}
               </div>
               <div>
-                <label className="label-field">Password</label>
-                <input type="password" className="input-field" placeholder="Minimal 6 karakter" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+                <label className={labelCls}>Nama Lengkap *</label>
+                <input type="text" className={inputCls} placeholder="Sesuai KK" value={f.name} onChange={W('name')} required />
               </div>
-              <div>
-                <label className="label-field">Role</label>
-                <select className="input-field" value={role} onChange={(e) => setRole(e.target.value)}>
-                  <option value="SISWA">Siswa</option>
-                  <option value="GURU">Guru</option>
-                  <option value="ADMIN">Admin</option>
-                </select>
-              </div>
-              <button type="submit" disabled={loading} className="btn-primary w-full py-3 text-base disabled:opacity-50">
-                {loading ? 'Mendaftar...' : 'Daftar'}
-              </button>
-            </form>
-          ) : (
-            <form onSubmit={handleActivate} className="space-y-5">
-              <div>
-                <label className="label-field">Username</label>
-                <input type="text" className="input-field" value={username} disabled />
-              </div>
-              <div>
-                <label className="label-field">Kode Aktivasi</label>
-                <div className="relative">
-                  <KeyRound size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                  <input type="text" className="input-field pl-10" placeholder="Masukkan kode aktivasi" value={activationCode} onChange={(e) => setActivationCode(e.target.value)} required />
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className={labelCls}>Gender *</label>
+                  <select className={inputCls} value={f.gender} onChange={W('gender')}>
+                    <option value="LAKI_LAKI">Laki-laki</option>
+                    <option value="PEREMPUAN">Perempuan</option>
+                  </select>
+                </div>
+                <div>
+                  <label className={labelCls}>Tgl Lahir</label>
+                  <input type="date" className={inputCls} value={f.dob} onChange={W('dob')} />
+                </div>
+                <div>
+                  <label className={labelCls}>Telepon</label>
+                  <input type="tel" className={inputCls} placeholder="08xxx" value={f.phone} onChange={W('phone')} />
                 </div>
               </div>
+              {il && (
+                <div>
+                  <label className={labelCls}>Alamat</label>
+                  <input type="text" className={inputCls} placeholder="Alamat lengkap" value={f.addr} onChange={W('addr')} />
+                </div>
+              )}
+              {il && (
+                <div>
+                  <label className={labelCls}>Jurusan *</label>
+                  <select className={inputCls} value={f.dept} onChange={e => { setF(p => ({...p, dept: e.target.value, cls: ''})); }} required>
+                    <option value="">Pilih Jurusan</option>
+                    {DEPARTMENTS.map(d => (
+                      <option key={d.id} value={d.id}>{d.name} — {d.fullName}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              {il && f.dept && (
+                <div>
+                  <label className={labelCls}>Kelas *</label>
+                  <select className={inputCls} value={f.cls} onChange={W('cls')} required>
+                    <option value="">Pilih Kelas</option>
+                    {classes.filter(c => c.departmentId === Number(f.dept)).map(c => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
               <div>
-                <label className="label-field">Password Baru</label>
-                <input type="password" className="input-field" placeholder="Minimal 6 karakter" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required minLength={6} />
+                <label className={labelCls}>Email *</label>
+                <input type="email" className={inputCls} placeholder="email@contoh.com" value={f.email} onChange={W('email')} required />
               </div>
-              <button type="submit" disabled={loading} className="btn-primary w-full py-3 text-base disabled:opacity-50">
-                {loading ? 'Mengaktifkan...' : 'Aktifkan Akun'}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className={labelCls}>Password *</label>
+                  <div className="relative">
+                    <input type={showP ? 'text' : 'password'} className={`${inputCls} pr-10`} placeholder="Min. 6 karakter" value={f.pass} onChange={W('pass')} required minLength={6} />
+                    <button type="button" onClick={() => setShowP(!showP)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                      {showP ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label className={labelCls}>Konfirmasi *</label>
+                  <input type="password" className={inputCls} placeholder="Ulangi password" value={f.pass2} onChange={W('pass2')} required minLength={6} />
+                  {f.pass && f.pass2 && f.pass !== f.pass2 && <p className="text-red-500 text-xs mt-1">Password tidak cocok</p>}
+                </div>
+              </div>
+              <button type="submit" disabled={load || (f.pass.length > 0 && f.pass !== f.pass2)} className="btn-primary w-full py-3 text-sm font-medium disabled:opacity-50 mt-1">
+                {load ? 'Mendaftar...' : 'Daftar'}
               </button>
             </form>
-          )}
-
-          <p className="text-sm text-gray-500 mt-6 text-center">
-            Sudah punya akun?{' '}
-            <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium">Masuk</Link>
+          </div>
+          <p className="text-sm text-gray-500 mt-4 text-center">
+            Sudah punya akun? <Link to="/login" className="text-primary-600 font-medium hover:underline">Masuk</Link>
           </p>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getMenuByRole } from '../config/menu';
@@ -31,6 +31,19 @@ export default function Sidebar() {
     if (!user?.role) return [];
     return getMenuByRole(user.role);
   }, [user?.role]);
+
+  // Auto-expand parent menus based on current path
+  useEffect(() => {
+    const expanded: string[] = [];
+    navItems.forEach((item) => {
+      if (item.children && item.children.some((child) => location.pathname === child.path)) {
+        expanded.push(item.path);
+      }
+    });
+    if (expanded.length > 0) {
+      setOpenMenus((prev) => [...new Set([...prev, ...expanded])]);
+    }
+  }, [location.pathname, navItems]);
 
   const toggleMenu = (path: string) => {
     setOpenMenus(prev => prev.includes(path) ? prev.filter(p => p !== path) : [...prev, path]);
