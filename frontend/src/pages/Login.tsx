@@ -4,6 +4,7 @@ import { BookOpen, Eye, EyeOff } from 'lucide-react';
 import { authService } from '../services/authService';
 import { useAuth } from '../context/AuthContext';
 import { getDashboardPath } from '../components/RoleRoute';
+import { triggerDoorTransition } from '../components/DoorTransition';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -22,8 +23,11 @@ export default function Login() {
       const res = await authService.login(username, password);
       const d = res?.data || res;
       if (d?.token) {
-        login(d.token, { id: d.id || 0, username: d.username, role: d.role, isActive: d.isActive });
-        navigate(getDashboardPath(d.role));
+        // Trigger transisi pintu saat login berhasil
+        triggerDoorTransition(() => {
+          login(d.token as string, { id: d.id || 0, username: d.username, role: d.role, isActive: d.isActive });
+          navigate(getDashboardPath(d.role));
+        });
       } else {
         setError(res?.message || 'Login gagal');
       }
@@ -36,42 +40,50 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex">
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary-800 via-primary-900 to-[#081a47] relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-20 w-72 h-72 bg-white rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-white rounded-full blur-3xl" />
+          <div className="absolute top-20 left-20 w-72 h-72 bg-primary-400 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-primary-300 rounded-full blur-3xl" />
         </div>
         <div className="relative z-10 flex flex-col items-center justify-center w-full p-12">
-          <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mb-8 backdrop-blur-sm">
-            <BookOpen size={40} className="text-white" />
+          <div className="w-48 h-48 flex items-center justify-center mb-8">
+            <img 
+              src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg" 
+              alt="Tut Wuri Handayani" 
+              className="w-full h-full drop-shadow-lg"
+            />
           </div>
           <h1 className="text-4xl font-bold text-white mb-4">SIASEK</h1>
-          <p className="text-xl text-primary-100 text-center max-w-md">
+          <p className="text-xl text-primary-200 text-center max-w-md">
             Sistem Informasi Akademik Sekolah
           </p>
-          <p className="text-primary-200 mt-4 text-center max-w-sm">
+          <p className="text-primary-300 mt-4 text-center max-w-sm">
             Platform terpadu untuk mengelola data akademik, jadwal, kehadiran, tugas, dan nilai siswa
           </p>
         </div>
       </div>
 
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-[#0a0f1a]">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center">
-              <BookOpen size={22} className="text-white" />
+            <div className="w-16 h-16 flex items-center justify-center">
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg" 
+                alt="Tut Wuri Handayani" 
+                className="w-full h-full drop-shadow-md"
+              />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">SIASEK</h1>
-              <p className="text-xs text-gray-400">Sistem Informasi Akademik</p>
+              <h1 className="text-xl font-bold text-slate-100">SIASEK</h1>
+              <p className="text-xs text-slate-500">Sistem Informasi Akademik</p>
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Masuk ke akun Anda</h2>
-          <p className="text-sm text-gray-500 mb-8">Masukkan kredensial untuk mengakses dashboard</p>
+          <h2 className="text-2xl font-bold text-slate-100 mb-2">Masuk ke akun Anda</h2>
+          <p className="text-sm text-slate-400 mb-8">Masukkan kredensial untuk mengakses dashboard</p>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
+            <div className="bg-red-900/30 border border-red-800 text-red-300 px-4 py-3 rounded-lg mb-6 text-sm">
               {error}
             </div>
           )}
@@ -99,7 +111,7 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300">
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
@@ -109,9 +121,9 @@ export default function Login() {
             </button>
           </form>
 
-          <p className="text-sm text-gray-500 mt-6 text-center">
+          <p className="text-sm text-slate-500 mt-6 text-center">
             Belum punya akun?{" "}
-            <Link to="/register" className="text-primary-600 hover:text-primary-700 font-medium">Daftar sekarang</Link>
+            <Link to="/register" className="text-primary-300 hover:text-primary-200 font-medium">Daftar sekarang</Link>
           </p>
         </div>
       </div>

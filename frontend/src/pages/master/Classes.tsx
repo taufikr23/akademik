@@ -115,7 +115,7 @@ export default function Classes() {
       key: 'isActive',
       header: 'Status',
       render: (item: ClassRoom) => (
-        <span className={item.isActive ? 'badge bg-green-100 text-green-700' : 'badge bg-gray-100 text-gray-700'}>
+        <span className={item.isActive ? 'badge bg-emerald-900/40 text-emerald-400' : 'badge bg-slate-700/50 text-slate-300'}>
           {item.isActive ? 'Active' : 'Inactive'}
         </span>
       ),
@@ -128,7 +128,7 @@ export default function Classes() {
           <button onClick={() => openEdit(item)} className="btn-icon">
             <Pencil size={16} />
           </button>
-          <button onClick={() => openDelete(item)} className="btn-icon text-red-600">
+          <button onClick={() => openDelete(item)} className="btn-icon text-red-400">
             <Trash2 size={16} />
           </button>
         </div>
@@ -193,7 +193,7 @@ export default function Classes() {
               </select>
             </div>
           </div>
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && <p className="text-red-400 text-sm">{error}</p>}
           <div className="flex justify-end gap-2 mt-6">
             <button type="button" onClick={() => setShowModal(false)} className="btn-secondary">Batal</button>
             <button type="submit" disabled={saving} className="btn-primary disabled:opacity-50">{saving ? 'Menyimpan...' : 'Simpan'}</button>

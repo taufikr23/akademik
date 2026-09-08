@@ -11,12 +11,12 @@ import { attendanceService } from '../../services/attendanceService';
 
 const dayNames: Record<number, string> = { 1: 'Senin', 2: 'Selasa', 3: 'Rabu', 4: 'Kamis', 5: 'Jumat', 6: 'Sabtu', 7: 'Minggu' };
 const dayColors: Record<number, string> = {
-  1: 'border-primary-500 bg-primary-900/30',
-  2: 'border-emerald-600 bg-emerald-900/30',
-  3: 'border-yellow-600 bg-yellow-900/30',
-  4: 'border-purple-600 bg-purple-900/30',
-  5: 'border-red-600 bg-red-900/30',
-  6: 'border-indigo-600 bg-indigo-900/30',
+  1: 'border-blue-500 bg-blue-50',
+  2: 'border-emerald-500 bg-emerald-50',
+  3: 'border-yellow-500 bg-yellow-50',
+  4: 'border-purple-500 bg-purple-50',
+  5: 'border-red-500 bg-red-50',
+  6: 'border-indigo-500 bg-indigo-50',
 };
 
 interface TeacherClassData {
@@ -41,11 +41,11 @@ interface AttendanceStat {
 }
 
 const quickLinks = [
-  { label: 'Jadwal Mengajar', path: '/operational/schedules', icon: <Calendar size={24} />, color: 'bg-primary-600' },
-  { label: 'Daftar Siswa', path: '/users/students', icon: <Users size={24} />, color: 'bg-emerald-600' },
-  { label: 'Presensi Siswa', path: '/operational/attendance', icon: <ClipboardCheck size={24} />, color: 'bg-orange-600' },
-  { label: 'Buat Tugas', path: '/operational/assignments', icon: <FileText size={24} />, color: 'bg-teal-600' },
-  { label: 'Input Nilai', path: '/operational/grades', icon: <Award size={24} />, color: 'bg-red-700' },
+  { label: 'Jadwal Mengajar', path: '/operational/schedules', icon: <Calendar size={24} />, color: 'from-blue-500 to-blue-600', bg: 'bg-blue-50' },
+  { label: 'Daftar Siswa', path: '/users/students', icon: <Users size={24} />, color: 'from-emerald-500 to-emerald-600', bg: 'bg-emerald-50' },
+  { label: 'Presensi Siswa', path: '/operational/attendance', icon: <ClipboardCheck size={24} />, color: 'from-orange-500 to-orange-600', bg: 'bg-orange-50' },
+  { label: 'Buat Tugas', path: '/operational/assignments', icon: <FileText size={24} />, color: 'from-teal-500 to-teal-600', bg: 'bg-teal-50' },
+  { label: 'Input Nilai', path: '/operational/grades', icon: <Award size={24} />, color: 'from-rose-500 to-rose-600', bg: 'bg-rose-50' },
 ];
 
 export default function TeacherDashboard() {
@@ -145,54 +145,54 @@ export default function TeacherDashboard() {
           <Link
             key={link.path}
             to={link.path}
-            className="flex flex-col items-center p-4 bg-slate-800 rounded-lg shadow-lg shadow-black/20 hover:shadow-lg hover:shadow-black/20 transition-shadow"
+            className="flex flex-col items-center p-6 bg-white/90 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all cursor-pointer"
           >
             <div className={`${link.color} text-white p-3 rounded-full mb-2`}>
               {link.icon}
             </div>
-            <span className="text-sm font-medium text-slate-300 text-center">{link.label}</span>
+            <span className="text-sm font-semibold text-gray-700 text-center">{link.label}</span>
           </Link>
         ))}
       </div>
 
       {/* Today's Schedule */}
-      <div className="bg-slate-800 rounded-xl shadow-lg shadow-black/20 border border-slate-700 p-6 mb-6">
+      <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
-          <Clock size={20} className="text-primary-300" />
-          <h3 className="text-lg font-semibold text-slate-100">Jadwal Mengajar Hari Ini</h3>
-          <span className="bg-primary-900/40 text-primary-300 px-2 py-0.5 rounded-full text-xs font-medium">
+          <Clock size={20} className="text-blue-600" />
+          <h3 className="text-lg font-semibold text-gray-900">Jadwal Mengajar Hari Ini</h3>
+          <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-xs font-medium">
             {dayNames[todayDayOfWeek]}
           </span>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center py-8">
-            <div className="w-8 h-8 border-4 border-primary-300 border-t-primary-500 rounded-full animate-spin" />
+            <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
           </div>
         ) : todaySchedule.length === 0 ? (
-          <div className="bg-slate-800/50 rounded-xl p-8 text-center">
-            <Calendar size={40} className="text-slate-600 mx-auto mb-3" />
-            <p className="text-slate-400 font-medium">Tidak ada jadwal mengajar hari ini</p>
-            <p className="text-slate-500 text-sm mt-1">Nikmati hari libur Anda! 🎉</p>
+          <div className="bg-gray-50 rounded-xl p-8 text-center">
+            <Calendar size={40} className="text-gray-300 mx-auto mb-3" />
+            <p className="text-gray-500 font-medium">Tidak ada jadwal mengajar hari ini</p>
+            <p className="text-gray-400 text-sm mt-1">Nikmati hari libur Anda! 🎉</p>
           </div>
         ) : (
           <div className="space-y-3">
             {todaySchedule.sort((a, b) => (a.start_time || '').localeCompare(b.start_time || '')).map(tc => (
-              <div key={tc.teacher_subject_id} className={`border-l-4 rounded-xl p-4 ${dayColors[todayDayOfWeek] || 'border-slate-500 bg-slate-800/50'}`}>
+              <div key={tc.teacher_subject_id} className={`border-l-4 rounded-xl p-4 ${dayColors[todayDayOfWeek] || 'border-gray-400 bg-gray-50'}`}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="text-center min-w-[80px]">
-                      <p className="text-sm font-bold text-slate-100">{tc.start_time || '-'}</p>
-                      <p className="text-xs text-slate-500">s/d</p>
-                      <p className="text-sm font-bold text-slate-100">{tc.end_time || '-'}</p>
+                      <p className="text-sm font-bold text-gray-900">{tc.start_time || '-'}</p>
+                      <p className="text-xs text-gray-400">s/d</p>
+                      <p className="text-sm font-bold text-gray-900">{tc.end_time || '-'}</p>
                     </div>
                     <div>
-                      <p className="font-semibold text-slate-100 text-lg">{tc.subject_name}</p>
+                      <p className="font-semibold text-gray-900 text-lg">{tc.subject_name}</p>
                       <div className="flex items-center gap-3 mt-1">
-                        <span className="bg-primary-900/40 text-primary-300 px-2 py-0.5 rounded-full text-xs font-medium">
+                        <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-xs font-medium">
                           {tc.class_name}
                         </span>
-                        <span className="bg-purple-900/40 text-purple-300 px-2 py-0.5 rounded-full text-xs font-medium">
+                        <span className="bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full text-xs font-medium">
                           {teacherClasses.find(c => c.class_id === tc.class_id)?.class_name?.includes('TSM') ? 'Teknik Sepeda Motor' :
                            teacherClasses.find(c => c.class_id === tc.class_id)?.class_name?.includes('TITL') ? 'Teknik Instalasi Tenaga Listrik' :
                            teacherClasses.find(c => c.class_id === tc.class_id)?.class_name?.includes('DPIB') ? 'Desain Pemodelan Informasi Bangunan' :
@@ -204,12 +204,12 @@ export default function TeacherDashboard() {
                            'Jurusan'}
                         </span>
                       </div>
-                      <p className="text-sm text-slate-400 mt-1">Ruang: {tc.room || '-'}</p>
+                      <p className="text-sm text-gray-500 mt-1">Ruang: {tc.room || '-'}</p>
                     </div>
                   </div>
                   <Link
                     to="/operational/attendance"
-                    className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors flex items-center gap-1"
+                    className="bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-600 transition-colors flex items-center gap-1"
                   >
                     <ClipboardCheck size={16} />
                     Absen
@@ -222,19 +222,19 @@ export default function TeacherDashboard() {
       </div>
 
       {/* Attendance Summary per Class */}
-      <div className="bg-slate-800 rounded-xl shadow-lg shadow-black/20 border border-slate-700 p-6 mb-6">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
-          <CheckCircle size={20} className="text-emerald-400" />
-          <h3 className="text-lg font-semibold text-slate-100">Rekap Kehadiran Siswa Hari Ini</h3>
+          <CheckCircle size={20} className="text-green-600" />
+          <h3 className="text-lg font-semibold text-gray-900">Rekap Kehadiran Siswa Hari Ini</h3>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center py-6">
-            <div className="w-6 h-6 border-4 border-emerald-800 border-t-emerald-400 rounded-full animate-spin" />
+            <div className="w-6 h-6 border-4 border-green-200 border-t-green-600 rounded-full animate-spin" />
           </div>
         ) : attendanceStats.length === 0 ? (
-          <div className="bg-slate-800/50 rounded-xl p-6 text-center">
-            <p className="text-slate-400">Belum ada data kehadiran hari ini</p>
+          <div className="bg-gray-50 rounded-xl p-6 text-center">
+            <p className="text-gray-500">Belum ada data kehadiran hari ini</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -244,37 +244,37 @@ export default function TeacherDashboard() {
                 : 0;
 
               return (
-                <div key={stat.classId} className="border border-slate-700 rounded-xl p-4 hover:shadow-lg hover:shadow-black/20 transition-shadow">
+                <div key={stat.classId} className="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-between mb-3">
                     <div>
-                      <h4 className="font-semibold text-slate-100">{stat.className}</h4>
-                      <p className="text-xs text-slate-400">{stat.subjectName}</p>
+                      <h4 className="font-semibold text-gray-900">{stat.className}</h4>
+                      <p className="text-xs text-gray-500">{stat.subjectName}</p>
                     </div>
                     <span className={`text-lg font-bold ${
-                      attendanceRate >= 80 ? 'text-emerald-400' :
-                      attendanceRate >= 50 ? 'text-yellow-400' : 'text-red-400'
+                      attendanceRate >= 80 ? 'text-green-600' :
+                      attendanceRate >= 50 ? 'text-yellow-600' : 'text-red-600'
                     }`}>
                       {attendanceRate}%
                     </span>
                   </div>
 
                   {/* Progress bar */}
-                  <div className="w-full bg-slate-700 rounded-full h-2 mb-3">
+                  <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
                     <div
                       className={`h-2 rounded-full transition-all duration-500 ${
-                        attendanceRate >= 80 ? 'bg-emerald-600' :
-                        attendanceRate >= 50 ? 'bg-yellow-600' : 'bg-red-700'
+                        attendanceRate >= 80 ? 'bg-green-500' :
+                        attendanceRate >= 50 ? 'bg-yellow-500' : 'bg-red-500'
                       }`}
                       style={{ width: `${attendanceRate}%` }}
                     />
                   </div>
 
                   <div className="flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-1 text-emerald-400">
+                    <div className="flex items-center gap-1 text-green-600">
                       <CheckCircle size={12} />
                       <span>Hadir: {stat.todayHadir}/{stat.totalStudents}</span>
                     </div>
-                    <div className="flex items-center gap-1 text-red-400">
+                    <div className="flex items-center gap-1 text-red-600">
                       <XCircle size={12} />
                       <span>Alpha: {stat.todayAlpha}</span>
                     </div>
@@ -282,7 +282,7 @@ export default function TeacherDashboard() {
 
                   <Link
                     to="/operational/attendance"
-                    className="mt-3 block text-center bg-primary-900/30 text-primary-300 py-1.5 rounded-lg text-xs font-medium hover:bg-primary-900/50 transition-colors"
+                    className="mt-3 block text-center bg-blue-50 text-blue-600 py-1.5 rounded-lg text-xs font-medium hover:bg-blue-100 transition-colors"
                   >
                     Lihat Detail →
                   </Link>
@@ -294,19 +294,19 @@ export default function TeacherDashboard() {
       </div>
 
       {/* All Classes Summary */}
-      <div className="bg-slate-800 rounded-xl shadow-lg shadow-black/20 border border-slate-700 p-6">
+      <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-center gap-2 mb-4">
-          <BookOpen size={20} className="text-purple-300" />
-          <h3 className="text-lg font-semibold text-slate-100">Kelas yang Anda Ajar</h3>
+          <BookOpen size={20} className="text-purple-600" />
+          <h3 className="text-lg font-semibold text-gray-900">Kelas yang Anda Ajar</h3>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center py-6">
-            <div className="w-6 h-6 border-4 border-purple-800 border-t-purple-400 rounded-full animate-spin" />
+            <div className="w-6 h-6 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin" />
           </div>
         ) : uniqueClasses.length === 0 ? (
-          <div className="bg-slate-800/50 rounded-xl p-6 text-center">
-            <p className="text-slate-400">Belum ada penugasan kelas</p>
+          <div className="bg-gray-50 rounded-xl p-6 text-center">
+            <p className="text-gray-500">Belum ada penugasan kelas</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -324,19 +324,19 @@ export default function TeacherDashboard() {
                               'Jurusan';
 
               return (
-                <div key={tc.class_id} className="flex items-center justify-between p-4 bg-slate-800/50 rounded-xl hover:bg-slate-700 transition-colors">
+                <div key={tc.class_id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                   <div className="flex items-center gap-4">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-white text-lg ${
-                      hasSchedule ? 'bg-primary-600' : 'bg-slate-500'
+                      hasSchedule ? 'bg-blue-500' : 'bg-gray-400'
                     }`}>
                       {tc.class_name?.charAt(0)}
                     </div>
                     <div>
-                      <h4 className="font-semibold text-slate-100">{tc.class_name}</h4>
-                      <p className="text-xs text-slate-400">{deptName}</p>
+                      <h4 className="font-semibold text-gray-900">{tc.class_name}</h4>
+                      <p className="text-xs text-gray-500">{deptName}</p>
                       <div className="flex flex-wrap gap-1 mt-1">
                         {subjects.map(s => (
-                          <span key={s.teacher_subject_id} className="bg-slate-800 border border-slate-700 text-slate-400 px-2 py-0.5 rounded text-xs">
+                          <span key={s.teacher_subject_id} className="bg-white border border-gray-200 text-gray-600 px-2 py-0.5 rounded text-xs">
                             {s.subject_name}
                           </span>
                         ))}
@@ -346,8 +346,8 @@ export default function TeacherDashboard() {
                   <div className="text-right">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                       hasSchedule
-                        ? 'bg-emerald-900/40 text-emerald-400'
-                        : 'bg-slate-700 text-slate-400'
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-gray-100 text-gray-500'
                     }`}>
                       {hasSchedule ? 'Terjadwal' : 'Belum Terjadwal'}
                     </span>

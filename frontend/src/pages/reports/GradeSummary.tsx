@@ -44,14 +44,14 @@ export default function GradeSummary() {
 
   const getPredikatColor = (predikat: string) => {
     switch (predikat) {
-      case 'A': return 'bg-green-100 text-green-800';
-      case 'B+': return 'bg-blue-100 text-blue-800';
-      case 'B': return 'bg-indigo-100 text-indigo-800';
-      case 'C+': return 'bg-yellow-100 text-yellow-800';
-      case 'C': return 'bg-orange-100 text-orange-800';
-      case 'D': return 'bg-red-100 text-red-800';
-      case 'E': return 'bg-red-200 text-red-900';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'A': return 'bg-emerald-900/40 text-emerald-400';
+      case 'B+': return 'bg-primary-900/40 text-primary-300';
+      case 'B': return 'bg-indigo-900/40 text-indigo-300';
+      case 'C+': return 'bg-yellow-900/40 text-yellow-400';
+      case 'C': return 'bg-orange-900/40 text-orange-400';
+      case 'D': return 'bg-red-900/40 text-red-400';
+      case 'E': return 'bg-red-900/50 text-red-400';
+      default: return 'bg-slate-700/50 text-slate-200';
     }
   };
 
@@ -77,7 +77,7 @@ export default function GradeSummary() {
         title="Rekap Nilai"
         subtitle="Rekap nilai siswa per mata pelajaran"
         action={
-          <button className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+          <button className="flex items-center gap-2 bg-emerald-700 text-white px-4 py-2 rounded-lg hover:bg-emerald-800">
             <Download size={16} />
             Export PDF
           </button>
@@ -85,13 +85,13 @@ export default function GradeSummary() {
       />
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow p-4 mb-6">
+      <div className="bg-slate-800 rounded-lg shadow-lg shadow-black/20 p-4 mb-6">
         <div className="flex items-center gap-4">
-          <Filter size={20} className="text-gray-500" />
+          <Filter size={20} className="text-slate-400" />
           <select
             value={selectedClass}
             onChange={(e) => setSelectedClass(e.target.value)}
-            className="border rounded-lg px-3 py-2"
+            className="bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2"
           >
             <option value="">Semua Kelas</option>
             <option value="X TKJ 1">X TKJ 1</option>
@@ -101,7 +101,7 @@ export default function GradeSummary() {
           <select
             value={selectedSubject}
             onChange={(e) => setSelectedSubject(e.target.value)}
-            className="border rounded-lg px-3 py-2"
+            className="bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2"
           >
             <option value="">Semua Mata Pelajaran</option>
             <option value="Jaringan">Jaringan</option>
@@ -112,36 +112,36 @@ export default function GradeSummary() {
       </div>
 
       {/* Grade Distribution */}
-      <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Distribusi Predikat</h3>
+      <div className="bg-slate-800 rounded-lg shadow-lg shadow-black/20 p-6 mb-6">
+        <h3 className="text-lg font-semibold text-slate-100 mb-4">Distribusi Predikat</h3>
         <div className="grid grid-cols-7 gap-2">
-          <div className="text-center p-3 bg-green-50 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">15%</div>
-            <div className="text-sm text-gray-600">A</div>
+          <div className="text-center p-3 bg-emerald-900/30 rounded-lg">
+            <div className="text-2xl font-bold text-emerald-400">15%</div>
+            <div className="text-sm text-slate-400">A</div>
           </div>
-          <div className="text-center p-3 bg-blue-50 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">25%</div>
-            <div className="text-sm text-gray-600">B+</div>
+          <div className="text-center p-3 bg-primary-900/30 rounded-lg">
+            <div className="text-2xl font-bold text-primary-300">25%</div>
+            <div className="text-sm text-slate-400">B+</div>
           </div>
-          <div className="text-center p-3 bg-indigo-50 rounded-lg">
-            <div className="text-2xl font-bold text-indigo-600">30%</div>
-            <div className="text-sm text-gray-600">B</div>
+          <div className="text-center p-3 bg-indigo-900/30 rounded-lg">
+            <div className="text-2xl font-bold text-indigo-300">30%</div>
+            <div className="text-sm text-slate-400">B</div>
           </div>
-          <div className="text-center p-3 bg-yellow-50 rounded-lg">
-            <div className="text-2xl font-bold text-yellow-600">15%</div>
-            <div className="text-sm text-gray-600">C+</div>
+          <div className="text-center p-3 bg-yellow-900/30 rounded-lg">
+            <div className="text-2xl font-bold text-yellow-400">15%</div>
+            <div className="text-sm text-slate-400">C+</div>
           </div>
-          <div className="text-center p-3 bg-orange-50 rounded-lg">
-            <div className="text-2xl font-bold text-orange-600">10%</div>
-            <div className="text-sm text-gray-600">C</div>
+          <div className="text-center p-3 bg-orange-900/30 rounded-lg">
+            <div className="text-2xl font-bold text-orange-400">10%</div>
+            <div className="text-sm text-slate-400">C</div>
           </div>
-          <div className="text-center p-3 bg-red-50 rounded-lg">
-            <div className="text-2xl font-bold text-red-600">4%</div>
-            <div className="text-sm text-gray-600">D</div>
+          <div className="text-center p-3 bg-red-900/30 rounded-lg">
+            <div className="text-2xl font-bold text-red-400">4%</div>
+            <div className="text-sm text-slate-400">D</div>
           </div>
-          <div className="text-center p-3 bg-red-100 rounded-lg">
-            <div className="text-2xl font-bold text-red-700">1%</div>
-            <div className="text-sm text-gray-600">E</div>
+          <div className="text-center p-3 bg-red-900/40 rounded-lg">
+            <div className="text-2xl font-bold text-red-400">1%</div>
+            <div className="text-sm text-slate-400">E</div>
           </div>
         </div>
       </div>

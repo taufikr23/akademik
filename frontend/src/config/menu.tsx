@@ -1,7 +1,7 @@
 import {
   Users, GraduationCap, Calendar,
   ClipboardCheck, FileText, Award, School, Clock, Home,
-  UserCheck, BookOpen, BarChart3, Settings,
+  UserCheck, BookOpen, BarChart3, Settings, UserCircle
 } from 'lucide-react';
 
 export interface NavItem {
@@ -44,12 +44,10 @@ export const adminMenu: NavItem[] = [
     label: 'Penugasan', path: '/assignments', icon: <UserCheck size={20} />,
     children: [
       { label: 'Guru & Mata Pelajaran', path: '/assignments/teacher-subjects' },
-      { label: 'Wali Kelas', path: '/assignments/homeroom' },
     ],
   },
 
-  // Pendaftaran Siswa
-  { label: 'Pendaftaran Siswa', path: '/enrollments', icon: <GraduationCap size={20} /> },
+  // Persetujuan Pendaftaran
   { label: 'Persetujuan Pendaftaran', path: '/admin/approvals', icon: <UserCheck size={20} /> },
 
   // Operasional
@@ -62,16 +60,6 @@ export const adminMenu: NavItem[] = [
       { label: 'Nilai', path: '/operational/grades' },
     ],
   },
-
-  // Laporan
-  {
-    label: 'Laporan', path: '/reports', icon: <BarChart3 size={20} />,
-    children: [
-      { label: 'Statistik Sekolah', path: '/reports/statistics' },
-      { label: 'Rekap Kehadiran', path: '/reports/attendance-summary' },
-      { label: 'Rekap Nilai', path: '/reports/grade-summary' },
-    ],
-  },
 ];
 
 // ============================================
@@ -80,6 +68,9 @@ export const adminMenu: NavItem[] = [
 export const teacherMenu: NavItem[] = [
   // Dashboard
   { label: 'Dashboard', path: '/dashboard/guru', icon: <Home size={20} /> },
+  
+  // Profil
+  { label: 'Profil Saya', path: '/profile', icon: <UserCircle size={20} /> },
 
   // Menu Utama Guru
   { label: 'Jadwal Mengajar', path: '/operational/schedules', icon: <Calendar size={20} /> },
@@ -102,6 +93,9 @@ export const teacherMenu: NavItem[] = [
 export const studentMenu: NavItem[] = [
   // Dashboard
   { label: 'Dashboard', path: '/dashboard/siswa', icon: <Home size={20} /> },
+  
+  // Profil
+  { label: 'Profil Saya', path: '/profile', icon: <UserCircle size={20} /> },
 
   // Menu Utama Siswa
   { label: 'Jadwal Pelajaran', path: '/operational/schedules', icon: <Calendar size={20} /> },

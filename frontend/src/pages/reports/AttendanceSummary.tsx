@@ -65,7 +65,7 @@ export default function AttendanceSummary() {
         title="Rekap Kehadiran"
         subtitle="Rekap kehadiran siswa per bulan"
         action={
-          <button className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+          <button className="flex items-center gap-2 bg-emerald-700 text-white px-4 py-2 rounded-lg hover:bg-emerald-800">
             <Download size={16} />
             Export PDF
           </button>
@@ -73,9 +73,9 @@ export default function AttendanceSummary() {
       />
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow p-4 mb-6">
+      <div className="bg-slate-800 rounded-lg shadow-lg shadow-black/20 p-4 mb-6">
         <div className="flex items-center gap-4">
-          <Filter size={20} className="text-gray-500" />
+          <Filter size={20} className="text-slate-400" />
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(Number(e.target.value))}
@@ -99,21 +99,21 @@ export default function AttendanceSummary() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-4 gap-4 mb-6">
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-green-600">85%</div>
-          <div className="text-sm text-gray-600">Rata-rata Kehadiran</div>
+        <div className="bg-emerald-900/30 border border-emerald-700 rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-emerald-400">85%</div>
+          <div className="text-sm text-slate-400">Rata-rata Kehadiran</div>
         </div>
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-yellow-600">8%</div>
-          <div className="text-sm text-gray-600">Izin</div>
+        <div className="bg-yellow-900/30 border border-yellow-700 rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-yellow-400">8%</div>
+          <div className="text-sm text-slate-400">Izin</div>
         </div>
-        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-orange-600">5%</div>
-          <div className="text-sm text-gray-600">Sakit</div>
+        <div className="bg-orange-900/30 border border-orange-700 rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-orange-400">5%</div>
+          <div className="text-sm text-slate-400">Sakit</div>
         </div>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-red-600">2%</div>
-          <div className="text-sm text-gray-600">Alpa</div>
+        <div className="bg-red-900/30 border border-red-700 rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-red-400">2%</div>
+          <div className="text-sm text-slate-400">Alpa</div>
         </div>
       </div>
 

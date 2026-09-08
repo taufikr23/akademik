@@ -14,9 +14,9 @@ interface LocalClass { id: number; name: string; }
 interface LocalYear { id: number; yearName: string; }
 
 const statusConfig: Record<string, { label: string; color: string }> = {
-  ACTIVE: { label: 'Aktif', color: 'bg-green-100 text-green-700' },
-  GRADUATED: { label: 'Lulus', color: 'bg-blue-100 text-blue-700' },
-  DROPPED: { label: 'Keluar', color: 'bg-red-100 text-red-700' },
+  ACTIVE: { label: 'Aktif', color: 'bg-emerald-900/40 text-emerald-400' },
+  GRADUATED: { label: 'Lulus', color: 'bg-primary-900/40 text-primary-300' },
+  DROPPED: { label: 'Keluar', color: 'bg-red-900/40 text-red-400' },
 };
 
 export default function Enrollments() {
@@ -121,14 +121,14 @@ export default function Enrollments() {
     {
       key: 'status', label: 'Status',
       render: (item: LocalEnrollment) => {
-        const cfg = statusConfig[item.status] || { label: item.status, color: 'bg-gray-100 text-gray-600' };
+        const cfg = statusConfig[item.status] || { label: item.status, color: 'bg-slate-700/50 text-slate-400' };
         return <span className={`px-2 py-1 rounded-full text-xs font-medium ${cfg.color}`}>{cfg.label}</span>;
       },
     },
     {
       key: 'actions', label: 'Aksi',
       render: (item: LocalEnrollment) => (
-        <button onClick={() => openDelete(item)} className="text-red-600 hover:text-red-800"><Trash2 size={16} /></button>
+        <button onClick={() => openDelete(item)} className="text-red-400 hover:text-red-300"><Trash2 size={16} /></button>
       ),
     },
   ];
@@ -139,11 +139,11 @@ export default function Enrollments() {
         title="Pendaftaran Siswa"
         action={
           <div className="flex items-center gap-3">
-            <select value={filterStudentId} onChange={e => setFilterStudentId(e.target.value)} className="border rounded-lg px-3 py-2 text-sm">
+            <select value={filterStudentId} onChange={e => setFilterStudentId(e.target.value)} className="bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2 text-sm">
               <option value="">Semua Siswa</option>
               {students.map(s => <option key={s.id} value={s.id}>{s.fullName} ({s.nis})</option>)}
             </select>
-            <button onClick={openAdd} className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"><Plus size={16} /> Tambah</button>
+            <button onClick={openAdd} className="bg-primary-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-primary-700"><Plus size={16} /> Tambah</button>
           </div>
         }
       />
@@ -152,39 +152,39 @@ export default function Enrollments() {
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Tambah Pendaftaran">
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Siswa</label>
-            <select value={form.studentId} onChange={e => setForm({ ...form, studentId: e.target.value })} className="w-full border rounded-lg px-3 py-2">
+            <label className="block text-sm font-medium text-slate-300 mb-1">Siswa</label>
+            <select value={form.studentId} onChange={e => setForm({ ...form, studentId: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2">
               <option value="">Pilih Siswa</option>
               {students.map(s => <option key={s.id} value={s.id}>{s.fullName} ({s.nis})</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
-            <select value={form.classId} onChange={e => setForm({ ...form, classId: e.target.value })} className="w-full border rounded-lg px-3 py-2">
+            <label className="block text-sm font-medium text-slate-300 mb-1">Kelas</label>
+            <select value={form.classId} onChange={e => setForm({ ...form, classId: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2">
               <option value="">Pilih Kelas</option>
               {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Tahun Akademik</label>
-            <select value={form.academicYearId} onChange={e => setForm({ ...form, academicYearId: e.target.value })} className="w-full border rounded-lg px-3 py-2">
+            <label className="block text-sm font-medium text-slate-300 mb-1">Tahun Akademik</label>
+            <select value={form.academicYearId} onChange={e => setForm({ ...form, academicYearId: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2">
               <option value="">Pilih Tahun Akademik</option>
               {academicYears.map(y => <option key={y.id} value={y.id}>{y.yearName}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-            <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })} className="w-full border rounded-lg px-3 py-2">
+            <label className="block text-sm font-medium text-slate-300 mb-1">Status</label>
+            <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2">
               <option value="ACTIVE">Aktif</option>
               <option value="GRADUATED">Lulus</option>
               <option value="DROPPED">Keluar</option>
             </select>
           </div>
           <div className="flex justify-end gap-2 pt-2">
-            <button onClick={() => setShowModal(false)} className="px-4 py-2 border rounded-lg text-gray-600 hover:bg-gray-50">Batal</button>
-            <button onClick={handleSave} disabled={saving} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">{saving ? 'Menyimpan...' : 'Simpan'}</button>
+            <button onClick={() => setShowModal(false)} className="px-4 py-2 border border-slate-600 rounded-lg text-slate-400 hover:bg-slate-700/50">Batal</button>
+            <button onClick={handleSave} disabled={saving} className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50">{saving ? 'Menyimpan...' : 'Simpan'}</button>
           </div>
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
         </div>
       </Modal>
 

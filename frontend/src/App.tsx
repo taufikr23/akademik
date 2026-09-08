@@ -25,10 +25,6 @@ import Students from './pages/users/Students';
 
 // Assignments (Penugasan)
 import TeacherAssignments from './pages/assignments/TeacherAssignments';
-import HomeroomTeachers from './pages/assignments/HomeroomTeachers';
-
-// Enrollment
-import Enrollments from './pages/enrollments/Enrollments';
 
 // Operational
 import Schedules from './pages/operational/Schedules';
@@ -36,10 +32,8 @@ import Attendance from './pages/operational/Attendance';
 import AssignmentPage from './pages/operational/Assignments';
 import Grades from './pages/operational/Grades';
 
-// Reports
-import Statistics from './pages/reports/Statistics';
-import AttendanceSummary from './pages/reports/AttendanceSummary';
-import GradeSummary from './pages/reports/GradeSummary';
+// Profile
+import Profile from './pages/Profile';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
@@ -80,6 +74,11 @@ export default function App() {
             <Route path="dashboard/siswa" element={
               <RoleRoute roles={['SISWA']}><StudentDashboard /></RoleRoute>
             } />
+            
+            {/* ==================== PROFIL ==================== */}
+            <Route path="profile" element={
+              <RoleRoute roles={['GURU', 'SISWA']}><Profile /></RoleRoute>
+            } />
 
             {/* ==================== MASTER DATA ==================== */}
             <Route path="master/academic-years" element={
@@ -110,14 +109,6 @@ export default function App() {
             <Route path="assignments/teacher-subjects" element={
               <RoleRoute roles={['ADMIN']}><TeacherAssignments /></RoleRoute>
             } />
-            <Route path="assignments/homeroom" element={
-              <RoleRoute roles={['ADMIN']}><HomeroomTeachers /></RoleRoute>
-            } />
-
-            {/* ==================== ENROLLMENT ==================== */}
-            <Route path="enrollments" element={
-              <RoleRoute roles={['ADMIN']}><Enrollments /></RoleRoute>
-            } />
 
             {/* ==================== APPROVALS ==================== */}
             <Route path="admin/approvals" element={
@@ -136,17 +127,6 @@ export default function App() {
             } />
             <Route path="operational/grades" element={
               <RoleRoute roles={['ADMIN', 'GURU', 'SISWA']}><Grades /></RoleRoute>
-            } />
-
-            {/* ==================== LAPORAN ==================== */}
-            <Route path="reports/statistics" element={
-              <RoleRoute roles={['ADMIN']}><Statistics /></RoleRoute>
-            } />
-            <Route path="reports/attendance-summary" element={
-              <RoleRoute roles={['ADMIN']}><AttendanceSummary /></RoleRoute>
-            } />
-            <Route path="reports/grade-summary" element={
-              <RoleRoute roles={['ADMIN']}><GradeSummary /></RoleRoute>
             } />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

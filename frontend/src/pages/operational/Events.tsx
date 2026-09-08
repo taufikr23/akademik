@@ -16,10 +16,10 @@ interface LocalEvent {
 }
 
 const eventTypeConfig: Record<string, { label: string; color: string }> = {
-  EXAM: { label: 'Ujian', color: 'bg-red-100 text-red-700' },
-  HOLIDAY: { label: 'Libur', color: 'bg-green-100 text-green-700' },
-  CEREMONY: { label: 'Upacara', color: 'bg-blue-100 text-blue-700' },
-  DEADLINE: { label: 'Batas Waktu', color: 'bg-orange-100 text-orange-700' },
+  EXAM: { label: 'Ujian', color: 'bg-red-900/40 text-red-400' },
+  HOLIDAY: { label: 'Libur', color: 'bg-emerald-900/40 text-emerald-400' },
+  CEREMONY: { label: 'Upacara', color: 'bg-primary-900/40 text-primary-300' },
+  DEADLINE: { label: 'Batas Waktu', color: 'bg-orange-900/40 text-orange-400' },
 };
 
 const initialForm = { title: '', eventType: 'EXAM', description: '', startDate: '', endDate: '' };
@@ -99,7 +99,7 @@ export default function Events() {
     {
       key: 'eventType', label: 'Tipe',
       render: (item: LocalEvent) => {
-        const cfg = eventTypeConfig[item.eventType] || { label: item.eventType, color: 'bg-gray-100 text-gray-600' };
+        const cfg = eventTypeConfig[item.eventType] || { label: item.eventType, color: 'bg-slate-700/50 text-slate-400' };
         return <span className={`px-2 py-1 rounded-full text-xs font-medium ${cfg.color}`}>{cfg.label}</span>;
       },
     },
@@ -110,8 +110,8 @@ export default function Events() {
       key: 'actions', label: 'Aksi',
       render: (item: LocalEvent) => (
         <div className="flex gap-2">
-          <button onClick={() => openEdit(item)} className="text-blue-600 hover:text-blue-800"><Edit2 size={16} /></button>
-          <button onClick={() => openDelete(item)} className="text-red-600 hover:text-red-800"><Trash2 size={16} /></button>
+          <button onClick={() => openEdit(item)} className="text-primary-300 hover:text-primary-200"><Edit2 size={16} /></button>
+          <button onClick={() => openDelete(item)} className="text-red-400 hover:text-red-300"><Trash2 size={16} /></button>
         </div>
       ),
     },
@@ -119,18 +119,18 @@ export default function Events() {
 
   return (
     <div>
-      <PageHeader title="Event Sekolah" action={<button onClick={openAdd} className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"><Plus size={16} /> Tambah</button>} />
+      <PageHeader title="Event Sekolah" action={<button onClick={openAdd} className="bg-primary-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-primary-700"><Plus size={16} /> Tambah</button>} />
       <DataTable columns={columns} data={events} loading={loading} />
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={editingId ? 'Edit Event' : 'Tambah Event'}>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Judul</label>
-            <input type="text" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="w-full border rounded-lg px-3 py-2" />
+            <label className="block text-sm font-medium text-slate-300 mb-1">Judul</label>
+            <input type="text" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Tipe Event</label>
-            <select value={form.eventType} onChange={e => setForm({ ...form, eventType: e.target.value })} className="w-full border rounded-lg px-3 py-2">
+            <label className="block text-sm font-medium text-slate-300 mb-1">Tipe Event</label>
+            <select value={form.eventType} onChange={e => setForm({ ...form, eventType: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2">
               <option value="EXAM">Ujian</option>
               <option value="HOLIDAY">Libur</option>
               <option value="CEREMONY">Upacara</option>
@@ -138,24 +138,24 @@ export default function Events() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-            <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full border rounded-lg px-3 py-2" rows={3} />
+            <label className="block text-sm font-medium text-slate-300 mb-1">Deskripsi</label>
+            <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2" rows={3} />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai</label>
-              <input type="date" value={form.startDate} onChange={e => setForm({ ...form, startDate: e.target.value })} className="w-full border rounded-lg px-3 py-2" />
+              <label className="block text-sm font-medium text-slate-300 mb-1">Tanggal Mulai</label>
+              <input type="date" value={form.startDate} onChange={e => setForm({ ...form, startDate: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Tanggal Selesai</label>
-              <input type="date" value={form.endDate} onChange={e => setForm({ ...form, endDate: e.target.value })} className="w-full border rounded-lg px-3 py-2" />
+              <label className="block text-sm font-medium text-slate-300 mb-1">Tanggal Selesai</label>
+              <input type="date" value={form.endDate} onChange={e => setForm({ ...form, endDate: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2" />
             </div>
           </div>
           <div className="flex justify-end gap-2 pt-2">
-            <button onClick={() => setShowModal(false)} className="px-4 py-2 border rounded-lg text-gray-600 hover:bg-gray-50">Batal</button>
-            <button onClick={handleSave} disabled={saving} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">{saving ? 'Menyimpan...' : 'Simpan'}</button>
+            <button onClick={() => setShowModal(false)} className="px-4 py-2 border border-slate-600 rounded-lg text-slate-400 hover:bg-slate-700/50">Batal</button>
+            <button onClick={handleSave} disabled={saving} className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50">{saving ? 'Menyimpan...' : 'Simpan'}</button>
           </div>
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
         </div>
       </Modal>
 

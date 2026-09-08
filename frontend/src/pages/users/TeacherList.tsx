@@ -87,7 +87,7 @@ export default function TeacherList() {
       key: 'gender',
       label: 'Gender',
       render: (item: Teacher) => (
-        <span className={item.gender === 'Laki-laki' ? 'badge bg-blue-100 text-blue-700' : 'badge bg-pink-100 text-pink-700'}>
+        <span className={item.gender === 'Laki-laki' ? 'badge bg-primary-900/40 text-primary-300' : 'badge bg-pink-900/40 text-pink-300'}>
           {item.gender === 'Laki-laki' ? 'Laki-laki' : 'Perempuan'}
         </span>
       ),
@@ -98,7 +98,7 @@ export default function TeacherList() {
       key: 'isActive',
       label: 'Status',
       render: (item: Teacher) => (
-        <span className={item.isActive ? 'badge bg-green-100 text-green-700' : 'badge bg-gray-100 text-gray-700'}>
+        <span className={item.isActive ? 'badge bg-emerald-900/30 text-emerald-400' : 'badge bg-slate-700/50 text-slate-400'}>
           {item.isActive ? 'Active' : 'Inactive'}
         </span>
       ),
@@ -111,7 +111,7 @@ export default function TeacherList() {
           <button onClick={() => openEdit(item)} className="btn-icon">
             <Pencil size={16} />
           </button>
-          <button onClick={() => openDelete(item)} className="btn-icon text-red-600">
+          <button onClick={() => openDelete(item)} className="btn-icon text-red-400">
             <Trash2 size={16} />
           </button>
         </div>

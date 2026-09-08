@@ -89,7 +89,7 @@ export default function Semesters() {
       key: 'semesterType',
       header: 'Semester Type',
       render: (item: Semester) => (
-        <span className={item.semesterType === 'GANJIL' ? 'badge bg-blue-100 text-blue-700' : 'badge bg-purple-100 text-purple-700'}>
+        <span className={item.semesterType === 'GANJIL' ? 'badge bg-primary-900/40 text-primary-300' : 'badge bg-purple-900/40 text-purple-300'}>
           {item.semesterType}
         </span>
       ),
@@ -103,7 +103,7 @@ export default function Semesters() {
       key: 'isActive',
       header: 'Status',
       render: (item: Semester) => (
-        <span className={item.isActive ? 'badge bg-green-100 text-green-700' : 'badge bg-gray-100 text-gray-700'}>
+        <span className={item.isActive ? 'badge bg-emerald-900/40 text-emerald-400' : 'badge bg-slate-700/50 text-slate-300'}>
           {item.isActive ? 'Active' : 'Inactive'}
         </span>
       ),
@@ -116,7 +116,7 @@ export default function Semesters() {
           <button onClick={() => openEdit(item)} className="btn-icon">
             <Pencil size={16} />
           </button>
-          <button onClick={() => openDelete(item)} className="btn-icon text-red-600">
+          <button onClick={() => openDelete(item)} className="btn-icon text-red-400">
             <Trash2 size={16} />
           </button>
         </div>
@@ -159,7 +159,7 @@ export default function Semesters() {
               </select>
             </div>
           </div>
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && <p className="text-red-400 text-sm">{error}</p>}
           <div className="flex justify-end gap-2 mt-6">
             <button type="button" onClick={() => setShowModal(false)} className="btn-secondary">Batal</button>
             <button type="submit" disabled={saving} className="btn-primary disabled:opacity-50">{saving ? 'Menyimpan...' : 'Simpan'}</button>

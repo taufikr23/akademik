@@ -24,11 +24,11 @@ export default function Modal({ isOpen, show, onClose, title, children, maxWidth
 
   return (
     <div ref={overlayRef} className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}>
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-      <div className={`relative bg-white rounded-xl shadow-2xl w-full ${maxWidth} max-h-[90vh] flex flex-col`}>
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div className={`relative bg-slate-800 rounded-xl shadow-2xl w-full ${maxWidth} max-h-[90vh] flex flex-col border border-slate-700`}>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-700">
+          <h2 className="text-lg font-semibold text-slate-100">{title}</h2>
+          <button onClick={onClose} className="text-slate-500 hover:text-slate-300 transition-colors">
             <X size={20} />
           </button>
         </div>

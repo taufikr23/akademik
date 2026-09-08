@@ -149,7 +149,7 @@ export default function TeacherAssignments() {
     {
       key: 'isActive', label: 'Status',
       render: (item: Assignment) => (
-        <span className={`px-2 py-1 rounded-full text-xs font-medium ${item.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
+        <span className={`px-2 py-1 rounded-full text-xs font-medium ${item.isActive ? 'bg-emerald-900/40 text-emerald-400' : 'bg-slate-700/50 text-slate-300'}`}>
           {item.isActive ? 'Aktif' : 'Nonaktif'}
         </span>
       ),
@@ -157,7 +157,7 @@ export default function TeacherAssignments() {
     {
       key: 'actions', label: 'Aksi',
       render: (item: Assignment) => (
-        <button onClick={() => openDelete(item)} className="text-red-600 hover:text-red-800"><Trash2 size={16} /></button>
+        <button onClick={() => openDelete(item)} className="text-red-400 hover:text-red-300"><Trash2 size={16} /></button>
       ),
     },
   ];
@@ -165,17 +165,17 @@ export default function TeacherAssignments() {
   return (
     <div>
       <PageHeader title="Guru & Mata Pelajaran" subtitle="Atur jadwal mengajar guru ke kelas" action={
-        <button onClick={openAdd} className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"><Plus size={16} /> Tambah</button>
+        <button onClick={openAdd} className="bg-primary-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-primary-700"><Plus size={16} /> Tambah</button>
       } />
 
-      <div className="bg-white rounded-xl shadow p-4 mb-4 flex items-center gap-3">
+      <div className="bg-slate-800 rounded-xl shadow-lg shadow-black/20 p-4 mb-4 flex items-center gap-3">
         <div className="relative flex-1">
-          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
           <input type="text" placeholder="Cari guru, mapel, atau kelas..." value={search} onChange={e => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none" />
+            className="w-full pl-10 pr-4 py-2.5 bg-slate-800 text-slate-100 border border-slate-600 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 outline-none" />
         </div>
-        {search && <button onClick={() => setSearch('')} className="text-sm text-gray-500 hover:text-gray-700">Reset</button>}
-        <span className="text-sm text-gray-400">{filtered.length} data</span>
+        {search && <button onClick={() => setSearch('')} className="text-sm text-slate-400 hover:text-slate-300">Reset</button>}
+        <span className="text-sm text-slate-500">{filtered.length} data</span>
       </div>
 
       <DataTable columns={columns} data={filtered} loading={loading} />
@@ -207,7 +207,7 @@ export default function TeacherAssignments() {
                   <option key={s.id} value={s.id}>{s.name} ({s.code}) — {s.jenis}</option>
                 ))}
               </select>
-              {form.classId && <p className="text-xs text-gray-400 mt-1">Mapel difilter berdasarkan jurusan kelas</p>}
+              {form.classId && <p className="text-xs text-slate-500 mt-1">Mapel difilter berdasarkan jurusan kelas</p>}
             </div>
             <div>
               <label className="label-field">Tahun Ajaran *</label>
@@ -243,10 +243,10 @@ export default function TeacherAssignments() {
                 <option value="-">Pilih Slot Waktu</option>
                 {TIME_SLOTS.map(s => <option key={s.start} value={`${s.start}-${s.end}`}>{s.label}</option>)}
               </select>
-              <p className="text-xs text-gray-400 mt-1">1 hari maksimal 3 mata pelajaran (3 slot)</p>
+              <p className="text-xs text-slate-500 mt-1">1 hari maksimal 3 mata pelajaran (3 slot)</p>
             </div>
           </div>
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
           <div className="flex justify-end gap-2 mt-6">
             <button type="button" onClick={() => setShowModal(false)} className="btn-secondary">Batal</button>
             <button type="submit" disabled={saving} className="btn-primary disabled:opacity-50">{saving ? 'Menyimpan...' : 'Simpan'}</button>

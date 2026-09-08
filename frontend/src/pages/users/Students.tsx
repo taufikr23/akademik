@@ -125,7 +125,7 @@ export default function Students() {
     {
       key: 'isActive', label: 'Status',
       render: (v: LocalStudent) => (
-        <span className={`px-2 py-1 rounded-full text-xs font-medium ${v.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
+        <span className={`px-2 py-1 rounded-full text-xs font-medium ${v.isActive ? 'bg-emerald-900/40 text-emerald-400' : 'bg-slate-700/50 text-slate-400'}`}>
           {v.isActive ? 'Aktif' : 'Nonaktif'}
         </span>
       ),
@@ -134,8 +134,8 @@ export default function Students() {
       key: 'actions', label: 'Aksi',
       render: (row: LocalStudent) => (
         <div className="flex gap-2">
-          <button onClick={() => openEdit(row)} className="text-blue-600 hover:text-blue-800"><Edit2 size={16} /></button>
-          <button onClick={() => openDelete(row)} className="text-red-600 hover:text-red-800"><Trash2 size={16} /></button>
+          <button onClick={() => openEdit(row)} className="text-primary-300 hover:text-primary-200"><Edit2 size={16} /></button>
+          <button onClick={() => openDelete(row)} className="text-red-400 hover:text-red-300"><Trash2 size={16} /></button>
         </div>
       ),
     },
@@ -143,25 +143,25 @@ export default function Students() {
 
   return (
     <div>
-      <PageHeader title="Data Siswa" action={<button onClick={openAdd} className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"><Plus size={16} /> Tambah</button>} />
+      <PageHeader title="Data Siswa" action={<button onClick={openAdd} className="bg-primary-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-primary-700"><Plus size={16} /> Tambah</button>} />
 
-      <div className="bg-white rounded-xl shadow p-4 mb-4 flex items-center gap-3">
+      <div className="bg-slate-800 rounded-xl shadow-lg shadow-black/20 p-4 mb-4 flex items-center gap-3">
         <div className="relative flex-1">
-          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
             placeholder="Cari nama, NIS, NISN, telepon, atau jurusan..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none"
+            className="w-full pl-10 pr-4 py-2.5 bg-slate-800 border border-slate-600 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 outline-none transition-colors"
           />
         </div>
         {search && (
-          <button onClick={() => setSearch('')} className="text-sm text-gray-500 hover:text-gray-700 whitespace-nowrap">
+          <button onClick={() => setSearch('')} className="text-sm text-slate-400 hover:text-slate-100 whitespace-nowrap">
             Reset
           </button>
         )}
-        <span className="text-sm text-gray-400 whitespace-nowrap">{filtered.length} data</span>
+        <span className="text-sm text-slate-400 whitespace-nowrap">{filtered.length} data</span>
       </div>
 
       <DataTable columns={columns} data={filtered} loading={loading} />
@@ -170,47 +170,47 @@ export default function Students() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">NIS</label>
-              <input type="text" value={form.nis} onChange={e => setForm({ ...form, nis: e.target.value })} className="w-full border rounded-lg px-3 py-2" required />
+              <label className="block text-sm font-medium text-slate-300 mb-1">NIS</label>
+              <input type="text" value={form.nis} onChange={e => setForm({ ...form, nis: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder-slate-500" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">NISN</label>
-              <input type="text" value={form.nisn} onChange={e => setForm({ ...form, nisn: e.target.value })} className="w-full border rounded-lg px-3 py-2" />
+              <label className="block text-sm font-medium text-slate-300 mb-1">NISN</label>
+              <input type="text" value={form.nisn} onChange={e => setForm({ ...form, nisn: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder-slate-500" />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-            <input type="text" value={form.fullName} onChange={e => setForm({ ...form, fullName: e.target.value })} className="w-full border rounded-lg px-3 py-2" required />
+            <label className="block text-sm font-medium text-slate-300 mb-1">Nama Lengkap</label>
+            <input type="text" value={form.fullName} onChange={e => setForm({ ...form, fullName: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder-slate-500" required />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Jenis Kelamin</label>
-              <select value={form.gender} onChange={e => setForm({ ...form, gender: e.target.value })} className="w-full border rounded-lg px-3 py-2">
+              <label className="block text-sm font-medium text-slate-300 mb-1">Jenis Kelamin</label>
+              <select value={form.gender} onChange={e => setForm({ ...form, gender: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500">
                 <option value="LAKI_LAKI">Laki-laki</option>
                 <option value="PEREMPUAN">Perempuan</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Jurusan</label>
-              <select value={form.departmentId} onChange={e => setForm({ ...form, departmentId: e.target.value })} className="w-full border rounded-lg px-3 py-2">
+              <label className="block text-sm font-medium text-slate-300 mb-1">Jurusan</label>
+              <select value={form.departmentId} onChange={e => setForm({ ...form, departmentId: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500">
                 <option value="">Pilih Jurusan</option>
                 {departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
               </select>
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Telepon</label>
-            <input type="text" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="w-full border rounded-lg px-3 py-2" />
+            <label className="block text-sm font-medium text-slate-300 mb-1">Telepon</label>
+            <input type="text" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder-slate-500" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
-            <textarea value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} className="w-full border rounded-lg px-3 py-2" rows={2} />
+            <label className="block text-sm font-medium text-slate-300 mb-1">Alamat</label>
+            <textarea value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder-slate-500" rows={2} />
           </div>
           <div className="flex justify-end gap-2 pt-2">
-            <button onClick={() => setShowModal(false)} className="px-4 py-2 border rounded-lg text-gray-600 hover:bg-gray-50">Batal</button>
-            <button onClick={handleSave} disabled={saving} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">{saving ? 'Menyimpan...' : 'Simpan'}</button>
+            <button onClick={() => setShowModal(false)} className="px-4 py-2 border border-slate-600 rounded-lg text-slate-300 hover:bg-slate-700/50 hover:text-slate-100 transition-colors">Batal</button>
+            <button onClick={handleSave} disabled={saving} className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 transition-colors">{saving ? 'Menyimpan...' : 'Simpan'}</button>
           </div>
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
         </div>
       </Modal>
 

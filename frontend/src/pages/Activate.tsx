@@ -47,16 +47,15 @@ export default function Activate() {
     }
   };
 
-  // Invalid token / missing params
   if (validToken === false) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <AlertCircle size={32} className="text-red-600" />
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0f1a]">
+        <div className="w-full max-w-md bg-slate-800 rounded-xl shadow-lg p-8 text-center border border-slate-700">
+          <div className="w-16 h-16 bg-red-900/40 rounded-full flex items-center justify-center mx-auto mb-4">
+            <AlertCircle size={32} className="text-red-400" />
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Link Tidak Valid</h2>
-          <p className="text-gray-500 text-sm mb-6">
+          <h2 className="text-xl font-bold text-slate-100 mb-2">Link Tidak Valid</h2>
+          <p className="text-slate-400 text-sm mb-6">
             {!token || !user
               ? 'Link aktivasi tidak lengkap. Silakan minta link baru ke administrator.'
               : 'Link aktivasi tidak valid atau sudah kedaluarsa. Silakan minta link baru ke administrator.'}
@@ -72,25 +71,23 @@ export default function Activate() {
     );
   }
 
-  // Loading token validation
   if (validToken === null) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0f1a]">
+        <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-500 rounded-full animate-spin" />
       </div>
     );
   }
 
-  // Success state
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle size={32} className="text-green-600" />
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0f1a]">
+        <div className="w-full max-w-md bg-slate-800 rounded-xl shadow-lg p-8 text-center border border-slate-700">
+          <div className="w-16 h-16 bg-emerald-900/40 rounded-full flex items-center justify-center mx-auto mb-4">
+            <CheckCircle size={32} className="text-emerald-400" />
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Akun Berhasil Diaktifkan!</h2>
-          <p className="text-gray-500 text-sm mb-6">
+          <h2 className="text-xl font-bold text-slate-100 mb-2">Akun Berhasil Diaktifkan!</h2>
+          <p className="text-slate-400 text-sm mb-6">
             Anda akan dialihkan ke halaman login dalam beberapa detik.
           </p>
           <button
@@ -104,47 +101,52 @@ export default function Activate() {
     );
   }
 
-  // Activation form
   return (
     <div className="min-h-screen flex">
-      {/* Left Panel - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary-800 via-primary-900 to-[#081a47] relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-20 w-72 h-72 bg-white rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-white rounded-full blur-3xl" />
+          <div className="absolute top-20 left-20 w-72 h-72 bg-primary-400 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-primary-300 rounded-full blur-3xl" />
         </div>
         <div className="relative z-10 flex flex-col items-center justify-center w-full p-12">
-          <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mb-8 backdrop-blur-sm">
-            <BookOpen size={40} className="text-white" />
+          <div className="w-48 h-48 flex items-center justify-center mb-8">
+            <img 
+              src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg" 
+              alt="Tut Wuri Handayani" 
+              className="w-full h-full drop-shadow-lg"
+            />
           </div>
           <h1 className="text-4xl font-bold text-white mb-4">SIASEK</h1>
-          <p className="text-xl text-primary-100 text-center max-w-md">
+          <p className="text-xl text-primary-200 text-center max-w-md">
             Aktivasi Akun
           </p>
-          <p className="text-primary-200 mt-4 text-center max-w-sm">
+          <p className="text-primary-300 mt-4 text-center max-w-sm">
             Buat password baru untuk mengakses sistem informasi akademik sekolah
           </p>
         </div>
       </div>
 
-      {/* Right Panel - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-[#0a0f1a]">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center">
-              <BookOpen size={22} className="text-white" />
+            <div className="w-16 h-16 flex items-center justify-center">
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg" 
+                alt="Tut Wuri Handayani" 
+                className="w-full h-full drop-shadow-md"
+              />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">SIASEK</h1>
-              <p className="text-xs text-gray-400">Sistem Informasi Akademik</p>
+              <h1 className="text-xl font-bold text-slate-100">SIASEK</h1>
+              <p className="text-xs text-slate-500">Sistem Informasi Akademik</p>
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Aktivasi Akun</h2>
-          <p className="text-sm text-gray-500 mb-8">Buat password baru untuk akun Anda</p>
+          <h2 className="text-2xl font-bold text-slate-100 mb-2">Aktivasi Akun</h2>
+          <p className="text-sm text-slate-400 mb-8">Buat password baru untuk akun Anda</p>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
+            <div className="bg-red-900/30 border border-red-800 text-red-300 px-4 py-3 rounded-lg mb-6 text-sm">
               {error}
             </div>
           )}
@@ -154,7 +156,7 @@ export default function Activate() {
               <label className="label-field">Username (NIS/NIP)</label>
               <input
                 type="text"
-                className="input-field bg-gray-50"
+                className="input-field bg-slate-700"
                 value={user}
                 disabled
               />
@@ -174,7 +176,7 @@ export default function Activate() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -195,13 +197,13 @@ export default function Activate() {
                 <button
                   type="button"
                   onClick={() => setShowConfirm(!showConfirm)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
                 >
                   {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
               {password && confirmPassword && password !== confirmPassword && (
-                <p className="text-red-500 text-xs mt-1">Password tidak cocok</p>
+                <p className="text-red-400 text-xs mt-1">Password tidak cocok</p>
               )}
             </div>
             <button
@@ -213,11 +215,11 @@ export default function Activate() {
             </button>
           </form>
 
-          <p className="text-sm text-gray-500 mt-6 text-center">
+          <p className="text-sm text-slate-500 mt-6 text-center">
             Sudah punya akun?{' '}
             <button
               onClick={() => navigate('/login')}
-              className="text-primary-600 hover:text-primary-700 font-medium"
+              className="text-primary-300 hover:text-primary-200 font-medium"
             >
               Masuk
             </button>
