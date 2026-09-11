@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Check, X, Users, Clock } from 'lucide-react';
+import { Check, X, Users, Clock, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
 import { authService } from '../services/authService';
 
@@ -25,6 +25,11 @@ export default function PendingRegistrations() {
   const [users, setUsers] = useState<PendingUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState<number | null>(null);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [rejectUserId, setRejectUserId] = useState<number | null>(null);
+  const [showApproveModal, setShowApproveModal] = useState(false);
+  const [approveUserId, setApproveUserId] = useState<number | null>(null);
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -38,30 +43,116 @@ export default function PendingRegistrations() {
 
   useEffect(() => { load(); }, []);
 
-  const handleApprove = async (userId: number) => {
-    setProcessing(userId);
-    try {
-      await authService.approveUser(userId);
-      load();
-    } catch (e: any) {
-      alert(e.response?.data?.message || 'Gagal menyetujui');
-    } finally { setProcessing(null); }
+  useEffect(() => {
+    if (toast) {
+      const t = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(t);
+    }
+  }, [toast]);
+
+  const handleApprove = (userId: number) => {
+    setApproveUserId(userId);
+    setShowApproveModal(true);
   };
 
-  const handleReject = async (userId: number) => {
-    if (!confirm('Tolak pendaftaran ini?')) return;
-    setProcessing(userId);
+  const confirmApprove = async () => {
+    if (!approveUserId) return;
+    setProcessing(approveUserId);
+    setShowApproveModal(false);
     try {
-      await authService.rejectUser(userId);
+      await authService.approveUser(approveUserId);
+      setToast({ type: 'success', message: 'Pendaftaran berhasil disetujui!' });
       load();
     } catch (e: any) {
-      alert(e.response?.data?.message || 'Gagal menolak');
-    } finally { setProcessing(null); }
+      setToast({ type: 'error', message: e.response?.data?.message || 'Gagal menyetujui' });
+    } finally { setProcessing(null); setApproveUserId(null); }
+  };
+
+  const handleReject = (userId: number) => {
+    setRejectUserId(userId);
+    setShowRejectModal(true);
+  };
+
+  const confirmReject = async () => {
+    if (!rejectUserId) return;
+    setProcessing(rejectUserId);
+    setShowRejectModal(false);
+    try {
+      await authService.rejectUser(rejectUserId);
+      setToast({ type: 'success', message: 'Pendaftaran berhasil ditolak.' });
+      load();
+    } catch (e: any) {
+      setToast({ type: 'error', message: e.response?.data?.message || 'Gagal menolak' });
+    } finally { setProcessing(null); setRejectUserId(null); }
   };
 
   return (
     <div>
       <PageHeader title='Persetujuan Pendaftaran' subtitle='Setujui atau tolak pendaftaran siswa/guru baru' />
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed top-4 right-4 z-50">
+          <div className={`flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl border backdrop-blur-sm ${
+            toast.type === 'success'
+              ? 'bg-emerald-900/90 border-emerald-700 text-emerald-100'
+              : 'bg-red-900/90 border-red-700 text-red-100'
+          }`}>
+            {toast.type === 'success'
+              ? <CheckCircle size={20} className="text-emerald-400" />
+              : <XCircle size={20} className="text-red-400" />}
+            <span className="text-sm font-medium">{toast.message}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Konfirmasi Setujui */}
+      {showApproveModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowApproveModal(false)} />
+          <div className="relative bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6 border border-slate-700">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 rounded-full bg-emerald-900/40 flex items-center justify-center flex-shrink-0">
+                <Check size={24} className="text-emerald-400" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-100">Setujui Pendaftaran</h3>
+                <p className="text-sm text-slate-400 mt-1">Akun akan diaktifkan dan user dapat login.</p>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 mt-6">
+              <button onClick={() => setShowApproveModal(false)} className="px-4 py-2 text-sm font-medium text-slate-300 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors">Batal</button>
+              <button onClick={confirmApprove} className="px-4 py-2 text-sm font-medium text-white bg-emerald-700 rounded-lg hover:bg-emerald-800 transition-colors flex items-center gap-2">
+                <Check size={16} /> Setujui
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Konfirmasi Tolak */}
+      {showRejectModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowRejectModal(false)} />
+          <div className="relative bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6 border border-slate-700">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 rounded-full bg-red-900/40 flex items-center justify-center flex-shrink-0">
+                <AlertTriangle size={24} className="text-red-400" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-100">Tolak Pendaftaran</h3>
+                <p className="text-sm text-slate-400 mt-1">Pendaftaran ini akan ditolak dan tidak dapat login.</p>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 mt-6">
+              <button onClick={() => setShowRejectModal(false)} className="px-4 py-2 text-sm font-medium text-slate-300 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors">Batal</button>
+              <button onClick={confirmReject} className="px-4 py-2 text-sm font-medium text-white bg-red-700 rounded-lg hover:bg-red-800 transition-colors flex items-center gap-2">
+                <X size={16} /> Tolak
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className='bg-slate-800 rounded-xl shadow-lg shadow-black/20 p-6 mb-6'>
         <div className='flex items-center gap-3'>
@@ -100,7 +191,7 @@ export default function PendingRegistrations() {
                         {user.role === 'SISWA' ? 'Siswa' : 'Guru'}
                       </span>
                     </div>
-                    <div className='grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-1 text-sm'>
+                    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-4 sm:gap-x-6 gap-y-1 text-sm'>
                       <div><span className='text-slate-500'>{user.role === 'SISWA' ? 'NIS' : 'NIP'}:</span> <span className='text-slate-300 font-medium'>{user.username}</span></div>
                       {user.nisn && <div><span className='text-slate-500'>NISN:</span> <span className='text-slate-300'>{user.nisn}</span></div>}
                       {user.className && <div><span className='text-slate-500'>Kelas:</span> <span className='text-slate-300 font-medium'>{user.className}</span></div>}
@@ -117,13 +208,13 @@ export default function PendingRegistrations() {
                   <button
                     onClick={() => handleApprove(user.id)}
                     disabled={processing === user.id}
-                    className='flex items-center gap-2 px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800 disabled:opacity-50 text-sm font-medium'>
+                    className='flex items-center gap-2 px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800 disabled:opacity-50 text-sm font-medium transition-colors'>
                     <Check size={16} /> Setujui
                   </button>
                   <button
                     onClick={() => handleReject(user.id)}
                     disabled={processing === user.id}
-                    className='flex items-center gap-2 px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 disabled:opacity-50 text-sm font-medium'>
+                    className='flex items-center gap-2 px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 disabled:opacity-50 text-sm font-medium transition-colors'>
                     <X size={16} /> Tolak
                   </button>
                 </div>

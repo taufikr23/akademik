@@ -23,7 +23,6 @@ export const adminMenu: NavItem[] = [
     label: 'Master Data', path: '/master', icon: <School size={20} />,
     children: [
       { label: 'Tahun Ajaran', path: '/master/academic-years' },
-      { label: 'Semester', path: '/master/semesters' },
       { label: 'Jurusan', path: '/master/departments' },
       { label: 'Kelas', path: '/master/classes' },
       { label: 'Mata Pelajaran', path: '/master/subjects' },

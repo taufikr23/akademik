@@ -15,7 +15,8 @@ const DEPARTMENTS = [
   { id: 8, name: 'NKPI', fullName: 'Nautika Kapal Penangkap Ikan' },
 ];
 
-const inputCls = 'w-full border border-slate-600 rounded-xl px-3 py-2.5 text-sm bg-slate-800 text-slate-100 placeholder-slate-500 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 outline-none transition-all duration-200';
+const inputCls = 'w-full border rounded-xl px-3 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 outline-none transition-all duration-200';
+const inputStyle = { backgroundColor: '#1a2236', borderColor: '#2a3554' };
 const labelCls = 'block text-sm font-semibold text-slate-300 mb-1.5';
 const TRANSITION = 'transform 700ms cubic-bezier(0.4, 0, 0.2, 1)';
 
@@ -194,49 +195,49 @@ export default function Register() {
 
           <div className={`transition-all duration-300 ${contentFade ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}>
             <form onSubmit={submit} className="space-y-3">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className={labelCls}>{il ? 'NIS' : 'NIP'} *</label>
-                  <input type="text" className={inputCls} placeholder={il ? 'Nomor Induk Siswa' : 'Nomor Induk Pegawai'} value={f.nis} onChange={W('nis')} required />
+                  <input type="text" className={inputCls} style={inputStyle} placeholder={il ? 'Nomor Induk Siswa' : 'Nomor Induk Pegawai'} value={f.nis} onChange={W('nis')} required />
                 </div>
                 {il && (
                   <div>
                     <label className={labelCls}>NISN *</label>
-                    <input type="text" className={inputCls} placeholder="Nomor Induk Siswa Nasional" value={f.nisn} onChange={W('nisn')} required />
+                    <input type="text" className={inputCls} style={inputStyle} placeholder="Nomor Induk Siswa Nasional" value={f.nisn} onChange={W('nisn')} required />
                   </div>
                 )}
               </div>
               <div>
                 <label className={labelCls}>Nama Lengkap *</label>
-                <input type="text" className={inputCls} placeholder="Sesuai KK" value={f.name} onChange={W('name')} required />
+                <input type="text" className={inputCls} style={inputStyle} placeholder="Sesuai KK" value={f.name} onChange={W('name')} required />
               </div>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className={labelCls}>Gender *</label>
-                  <select className={inputCls} value={f.gender} onChange={W('gender')}>
+                  <select className={inputCls} style={inputStyle} value={f.gender} onChange={W('gender')}>
                     <option value="LAKI_LAKI">Laki-laki</option>
                     <option value="PEREMPUAN">Perempuan</option>
                   </select>
                 </div>
                 <div>
                   <label className={labelCls}>Tgl Lahir</label>
-                  <input type="date" className={inputCls} value={f.dob} onChange={W('dob')} />
+                  <input type="date" className={inputCls} style={inputStyle} value={f.dob} onChange={W('dob')} />
                 </div>
                 <div>
                   <label className={labelCls}>Telepon</label>
-                  <input type="tel" className={inputCls} placeholder="08xxx" value={f.phone} onChange={W('phone')} />
+                  <input type="tel" className={inputCls} style={inputStyle} placeholder="08xxx" value={f.phone} onChange={W('phone')} />
                 </div>
               </div>
               {il && (
                 <div>
                   <label className={labelCls}>Alamat</label>
-                  <input type="text" className={inputCls} placeholder="Alamat lengkap" value={f.addr} onChange={W('addr')} />
+                  <input type="text" className={inputCls} style={inputStyle} placeholder="Alamat lengkap" value={f.addr} onChange={W('addr')} />
                 </div>
               )}
               {il && (
                 <div>
                   <label className={labelCls}>Jurusan *</label>
-                  <select className={inputCls} value={f.dept} onChange={e => { setF(p => ({...p, dept: e.target.value, cls: ''})); }} required>
+                  <select className={inputCls} style={inputStyle} value={f.dept} onChange={e => { setF(p => ({...p, dept: e.target.value, cls: ''})); }} required>
                     <option value="">Pilih Jurusan</option>
                     {DEPARTMENTS.map(d => (
                       <option key={d.id} value={d.id}>{d.name} — {d.fullName}</option>
@@ -247,7 +248,7 @@ export default function Register() {
               {il && f.dept && (
                 <div>
                   <label className={labelCls}>Kelas *</label>
-                  <select className={inputCls} value={f.cls} onChange={W('cls')} required>
+                  <select className={inputCls} style={inputStyle} value={f.cls} onChange={W('cls')} required>
                     <option value="">Pilih Kelas</option>
                     {classes.filter(c => c.departmentId === Number(f.dept)).map(c => (
                       <option key={c.id} value={c.id}>{c.name}</option>
@@ -257,13 +258,13 @@ export default function Register() {
               )}
               <div>
                 <label className={labelCls}>Email *</label>
-                <input type="email" className={inputCls} placeholder="email@contoh.com" value={f.email} onChange={W('email')} required />
+                <input type="email" className={inputCls} style={inputStyle} placeholder="email@contoh.com" value={f.email} onChange={W('email')} required />
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className={labelCls}>Password *</label>
                   <div className="relative">
-                    <input type={showP ? 'text' : 'password'} className={`${inputCls} pr-10`} placeholder="Min. 6 karakter" value={f.pass} onChange={W('pass')} required minLength={6} />
+                    <input type={showP ? 'text' : 'password'} className={`${inputCls} pr-10`} style={inputStyle} placeholder="Min. 6 karakter" value={f.pass} onChange={W('pass')} required minLength={6} />
                     <button type="button" onClick={() => setShowP(!showP)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300">
                       {showP ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
@@ -271,7 +272,7 @@ export default function Register() {
                 </div>
                 <div>
                   <label className={labelCls}>Konfirmasi *</label>
-                  <input type="password" className={inputCls} placeholder="Ulangi password" value={f.pass2} onChange={W('pass2')} required minLength={6} />
+                  <input type="password" className={inputCls} style={inputStyle} placeholder="Ulangi password" value={f.pass2} onChange={W('pass2')} required minLength={6} />
                   {f.pass && f.pass2 && f.pass !== f.pass2 && <p className="text-red-400 text-xs mt-1">Password tidak cocok</p>}
                 </div>
               </div>

@@ -46,11 +46,11 @@ export default function DataTable<T extends { id: number }>({ columns, data, loa
   return (
     <div className="card overflow-hidden p-0">
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="w-full min-w-[600px]">
           <thead>
             <tr className="border-b border-slate-700 bg-slate-800/50">
               {columns.map((col, i) => (
-                <th key={getColKey(col, i)} className={`px-5 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider ${col.className || ''}`} style={col.width ? { width: col.width } : undefined}>
+                <th key={getColKey(col, i)} className={`px-3 sm:px-5 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap ${col.className || ''}`} style={col.width ? { width: col.width } : undefined}>
                   {getHeader(col)}
                 </th>
               ))}
@@ -59,7 +59,7 @@ export default function DataTable<T extends { id: number }>({ columns, data, loa
           <tbody className="divide-y divide-slate-700/50">
             {data.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="px-5 py-12 text-center text-sm text-slate-500">
+                <td colSpan={columns.length} className="px-3 sm:px-5 py-12 text-center text-sm text-slate-500">
                   {emptyMessage}
                 </td>
               </tr>
@@ -67,7 +67,7 @@ export default function DataTable<T extends { id: number }>({ columns, data, loa
               data.map((item, index) => (
                 <tr key={item.id} className="hover:bg-slate-700/30 transition-colors">
                   {columns.map((col, i) => (
-                    <td key={getColKey(col, i)} className={`px-5 py-3.5 text-sm text-slate-300 ${col.className || ''}`} style={col.width ? { width: col.width } : undefined}>
+                    <td key={getColKey(col, i)} className={`px-3 sm:px-5 py-3 text-sm text-slate-300 whitespace-nowrap ${col.className || ''}`} style={col.width ? { width: col.width } : undefined}>
                       {renderCell(col, item, index)}
                     </td>
                   ))}

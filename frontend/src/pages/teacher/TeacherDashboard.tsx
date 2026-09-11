@@ -140,12 +140,12 @@ export default function TeacherDashboard() {
       <PageHeader title="Dashboard Guru" subtitle="Selamat datang di Sistem Informasi Akademik SMK" />
 
       {/* Quick Links */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-8">
         {quickLinks.map((link) => (
           <Link
             key={link.path}
             to={link.path}
-            className="flex flex-col items-center p-4 bg-slate-800 rounded-lg shadow-lg shadow-black/20 hover:shadow-lg hover:shadow-black/20 transition-shadow"
+            className="flex flex-col items-center p-3 sm:p-4 bg-slate-800 rounded-lg shadow-lg shadow-black/20 hover:shadow-lg hover:shadow-black/20 transition-shadow"
           >
             <div className={`${link.color} text-white p-3 rounded-full mb-2`}>
               {link.icon}
@@ -179,7 +179,7 @@ export default function TeacherDashboard() {
           <div className="space-y-3">
             {todaySchedule.sort((a, b) => (a.start_time || '').localeCompare(b.start_time || '')).map(tc => (
               <div key={tc.teacher_subject_id} className={`border-l-4 rounded-xl p-4 ${dayColors[todayDayOfWeek] || 'border-slate-500 bg-slate-800/50'}`}>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                   <div className="flex items-center gap-4">
                     <div className="text-center min-w-[80px]">
                       <p className="text-sm font-bold text-slate-100">{tc.start_time || '-'}</p>

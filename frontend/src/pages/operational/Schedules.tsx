@@ -185,12 +185,12 @@ export default function Schedules() {
     <div>
       <PageHeader title="Jadwal Pelajaran" subtitle={isStudent ? 'Jadwal pelajaran kelas Anda' : isTeacher ? 'Jadwal mengajar Anda' : 'Atur jadwal pelajaran semua kelas'} action={(!isStudent && !isTeacher) ? <button onClick={openAdd} className="bg-primary-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-primary-700"><Plus size={16} /> Tambah</button> : undefined} />
 
-      <div className="bg-slate-800 rounded-xl shadow-lg shadow-black/20 p-4 mb-6 flex items-center gap-4">
-        <input type="text" placeholder="Cari kelas, guru, atau mapel..." value={search} onChange={e => setSearch(e.target.value)} className="flex-1 bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
-        <div className="flex gap-1">
-          <button onClick={() => setSelectedDay(null)} className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${!selectedDay ? 'bg-primary-600 text-white' : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700'}`}>Semua</button>
+      <div className="bg-slate-800 rounded-xl shadow-lg shadow-black/20 p-3 sm:p-4 mb-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+        <input type="text" placeholder="Cari kelas, guru, atau mapel..." value={search} onChange={e => setSearch(e.target.value)} className="flex-1 bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 sm:px-4 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
+        <div className="flex gap-1 overflow-x-auto pb-1 sm:pb-0">
+          <button onClick={() => setSelectedDay(null)} className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${!selectedDay ? 'bg-primary-600 text-white' : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700'}`}>Semua</button>
           {[1,2,3,4,5,6].map(d => (
-            <button key={d} onClick={() => setSelectedDay(d)} className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${selectedDay === d ? 'bg-primary-600 text-white' : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700'}`}>{dayNames[d]}</button>
+            <button key={d} onClick={() => setSelectedDay(d)} className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${selectedDay === d ? 'bg-primary-600 text-white' : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700'}`}>{dayNames[d]}</button>
           ))}
         </div>
       </div>

@@ -281,7 +281,7 @@ function GuruAssignmentView() {
         <div className="bg-slate-800 rounded-lg border border-slate-700 p-5 mb-4">
           <h4 className="font-semibold text-slate-200 mb-4">{editItem ? 'Edit Tugas' : 'Buat Tugas Baru'}</h4>
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">Judul Tugas</label>
                 <input type="text" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })}
@@ -301,7 +301,7 @@ function GuruAssignmentView() {
               <textarea value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} rows={2}
                 className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" placeholder="Deskripsi tugas..." />
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">Tipe</label>
                 <select value={formData.assignmentType} onChange={e => setFormData({ ...formData, assignmentType: e.target.value })}

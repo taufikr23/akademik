@@ -126,7 +126,7 @@ export default function Activate() {
         </div>
       </div>
 
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-[#0a0f1a]">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 bg-[#0a0f1a]">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center gap-3 mb-8">
             <div className="w-16 h-16 flex items-center justify-center">
@@ -156,7 +156,8 @@ export default function Activate() {
               <label className="label-field">Username (NIS/NIP)</label>
               <input
                 type="text"
-                className="input-field bg-slate-700"
+                className="input-field"
+                style={{ backgroundColor: '#1a2236', borderColor: '#2a3554' }}
                 value={user}
                 disabled
               />
@@ -167,6 +168,7 @@ export default function Activate() {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   className="input-field pr-10"
+                  style={{ backgroundColor: '#1a2236', borderColor: '#2a3554' }}
                   placeholder="Minimal 6 karakter"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -188,6 +190,7 @@ export default function Activate() {
                 <input
                   type={showConfirm ? 'text' : 'password'}
                   className="input-field pr-10"
+                  style={{ backgroundColor: '#1a2236', borderColor: '#2a3554' }}
                   placeholder="Ulangi password baru"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}

@@ -63,7 +63,7 @@ export default function Login() {
         </div>
       </div>
 
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-[#0a0f1a]">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 bg-[#0a0f1a]">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center gap-3 mb-8">
             <div className="w-16 h-16 flex items-center justify-center">

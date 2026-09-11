@@ -146,7 +146,7 @@ function GuruGradesView() {
               <p className="font-medium text-primary-200">{editModal.subjectName} — {editModal.className}</p>
               <p className="text-primary-300">Nilai Tugas: <span className="font-semibold">{editModal.tugasScore ?? 0}</span> (otomatis dari penilaian tugas)</p>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1">UTS (30%)</label>
                 <input type="number" value={utsScore} onChange={e => setUtsScore(Number(e.target.value))} min={0} max={100}

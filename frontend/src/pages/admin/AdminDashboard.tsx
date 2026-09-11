@@ -37,7 +37,7 @@ export default function AdminDashboard() {
 
       {/* Notifikasi Pendaftaran */}
       {pendingCount > 0 && (
-        <div className="bg-primary-900/40 border border-primary-500/50 rounded-lg p-4 mb-6 flex items-center justify-between shadow-lg shadow-black/20 animate-pulse">
+        <div className="bg-primary-900/40 border border-primary-500/50 rounded-lg p-3 sm:p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg shadow-black/20 animate-pulse">
           <div className="flex items-center gap-3">
             <div className="bg-primary-500/30 p-2 rounded-full">
               <Bell className="text-primary-300" size={20} />
@@ -54,12 +54,12 @@ export default function AdminDashboard() {
       )}
 
       {/* Quick Links */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 mb-8">
         {quickLinks.map((link) => (
           <Link
             key={link.path}
             to={link.path}
-            className="flex flex-col items-center p-4 bg-slate-800 rounded-lg shadow-lg shadow-black/20 hover:shadow-lg hover:shadow-black/20 transition-shadow"
+            className="flex flex-col items-center p-3 sm:p-4 bg-slate-800 rounded-lg shadow-lg shadow-black/20 hover:shadow-lg hover:shadow-black/20 transition-shadow"
           >
             <div className={`${link.color} text-white p-3 rounded-full mb-2`}>
               {link.icon}

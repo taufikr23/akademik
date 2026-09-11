@@ -216,7 +216,7 @@ export default function TeacherAssignments() {
                 {academicYears.map(y => <option key={y.id} value={y.id}>{y.yearName} {y.isActive ? '(Aktif)' : ''}</option>)}
               </select>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="label-field">Hari</label>
                 <select className="input-field" value={form.dayOfWeek} onChange={e => setForm({ ...form, dayOfWeek: e.target.value })}>

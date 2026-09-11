@@ -8,7 +8,7 @@ export default function Layout() {
       <DoorTransition />
       <Sidebar />
       <main className="lg:ml-64 min-h-screen">
-        <div className="p-6 lg:p-8 max-w-7xl mx-auto">
+        <div className="pt-16 lg:pt-0 p-3 sm:p-6 lg:p-8 max-w-7xl mx-auto">
           <Outlet />
         </div>
       </main>

@@ -143,9 +143,9 @@ export default function Students() {
 
   return (
     <div>
-      <PageHeader title="Data Siswa" action={<button onClick={openAdd} className="bg-primary-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-primary-700"><Plus size={16} /> Tambah</button>} />
+      <PageHeader title="Data Siswa" action={<button onClick={openAdd} className="bg-primary-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-primary-700 text-sm"><Plus size={16} /> <span className="hidden sm:inline">Tambah</span><span className="sm:hidden">+</span></button>} />
 
-      <div className="bg-slate-800 rounded-xl shadow-lg shadow-black/20 p-4 mb-4 flex items-center gap-3">
+      <div className="bg-slate-800 rounded-xl shadow-lg shadow-black/20 p-3 sm:p-4 mb-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
         <div className="relative flex-1">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
@@ -156,19 +156,21 @@ export default function Students() {
             className="w-full pl-10 pr-4 py-2.5 bg-slate-800 border border-slate-600 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/30 outline-none transition-colors"
           />
         </div>
-        {search && (
-          <button onClick={() => setSearch('')} className="text-sm text-slate-400 hover:text-slate-100 whitespace-nowrap">
-            Reset
-          </button>
-        )}
-        <span className="text-sm text-slate-400 whitespace-nowrap">{filtered.length} data</span>
+        <div className="flex items-center gap-3">
+          {search && (
+            <button onClick={() => setSearch('')} className="text-sm text-slate-400 hover:text-slate-100 whitespace-nowrap">
+              Reset
+            </button>
+          )}
+          <span className="text-sm text-slate-400 whitespace-nowrap">{filtered.length} data</span>
+        </div>
       </div>
 
       <DataTable columns={columns} data={filtered} loading={loading} />
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={editingId ? 'Edit Siswa' : 'Tambah Siswa'}>
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-1">NIS</label>
               <input type="text" value={form.nis} onChange={e => setForm({ ...form, nis: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder-slate-500" required />
@@ -182,7 +184,7 @@ export default function Students() {
             <label className="block text-sm font-medium text-slate-300 mb-1">Nama Lengkap</label>
             <input type="text" value={form.fullName} onChange={e => setForm({ ...form, fullName: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 placeholder-slate-500" required />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-1">Jenis Kelamin</label>
               <select value={form.gender} onChange={e => setForm({ ...form, gender: e.target.value })} className="w-full bg-slate-800 text-slate-100 border border-slate-600 rounded-lg px-3 py-2 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500">

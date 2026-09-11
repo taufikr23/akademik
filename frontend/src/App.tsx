@@ -14,7 +14,6 @@ import StudentDashboard from './pages/student/StudentDashboard';
 
 // Master Data
 import AcademicYears from './pages/master/AcademicYears';
-import Semesters from './pages/master/Semesters';
 import Departments from './pages/master/Departments';
 import Classes from './pages/master/Classes';
 import Subjects from './pages/master/Subjects';
@@ -84,10 +83,7 @@ export default function App() {
             <Route path="master/academic-years" element={
               <RoleRoute roles={['ADMIN']}><AcademicYears /></RoleRoute>
             } />
-            <Route path="master/semesters" element={
-              <RoleRoute roles={['ADMIN']}><Semesters /></RoleRoute>
-            } />
-            <Route path="master/departments" element={
+<Route path="master/departments" element={
               <RoleRoute roles={['ADMIN']}><Departments /></RoleRoute>
             } />
             <Route path="master/classes" element={
