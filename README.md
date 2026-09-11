@@ -341,7 +341,7 @@ Role     : ADMIN
 
 ---
 
-## 🖼️ Screenshot Aplikasi
+## �️ Screenshot Aplikasi
 
 ### Login
 ![Login](screenshots/login.png)
@@ -360,7 +360,7 @@ Role     : ADMIN
 
 ---
 
-## 📐 Arsitektur Microservices
+## �📐 Arsitektur Microservices
 
 ```
                     ┌─────────────┐
