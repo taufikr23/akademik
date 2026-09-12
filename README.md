@@ -6,7 +6,7 @@
 
 ## 👤 Nama Peserta
 **Taufik** — Proyek Individu
-
+**Link Video Persentase** : https://drive.google.com/file/d/10p7iuJojGlUx3IC_3Xw-svPVineLbWq1/view?usp=sharing
 ---
 
 ## 📋 Deskripsi Aplikasi
