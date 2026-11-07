@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/register").permitAll()
                 .requestMatchers("/api/auth/activate").permitAll()
                 .requestMatchers("/api/auth/login").permitAll()
-                .requestMatchers("/api/auth/admin/**").authenticated()
+                .requestMatchers("/api/auth/admin/**").hasRole("ADMIN")
                 .requestMatchers("/actuator/health").permitAll()
                 .anyRequest().authenticated()
             )

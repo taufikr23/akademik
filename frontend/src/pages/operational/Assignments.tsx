@@ -1,3 +1,4 @@
+import api from '../../api/client';
 import { useState, useEffect, useRef } from 'react';
 import PageHeader from '../../components/PageHeader';
 import Modal from '../../components/Modal';
@@ -6,6 +7,20 @@ import { assignmentService } from '../../services/assignmentService';
 import { academicService } from '../../services/academicService';
 import { useAuth } from '../../context/AuthContext';
 import { Edit, Trash2, Upload, FileText, Download, CheckCircle, Clock, Eye, Star } from 'lucide-react';
+
+async function downloadAssignmentFile(filename: string) {
+  try {
+    const response = await api.get('/api/assignment/files/' + encodeURIComponent(filename), { responseType: 'blob' });
+    const url = URL.createObjectURL(response.data);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch {
+    window.alert('Gagal mengunduh berkas tugas.');
+  }
+}
 
 interface Assignment {
   id: number;
@@ -135,9 +150,10 @@ function GuruAssignmentView() {
       if (materialFile) {
         const fd = new FormData();
         fd.append('file', materialFile);
-        const uploadRes = await fetch('/api/assignment/upload', { method: 'POST', body: fd });
-        const uploadData = await uploadRes.json();
-        if (uploadData.success) serverFileName = uploadData.data;
+        const upload = await api.post<string>('/api/assignment/upload', fd, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        serverFileName = upload.data;
       }
       const tc = teacherClasses.find(t => t.class_id === formData.classId && t.subject_id === formData.subjectId);
       const payload: any = { ...formData, teacherId: tc ? tc.teacher_id : 0, materialFile: serverFileName };
@@ -369,10 +385,10 @@ function GuruAssignmentView() {
                     <span>⭐ Max: {a.maxScore}</span>
                     <span>📝 {new Date(a.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                     {a.materialFile && (
-                      <a href={`/api/assignment/files/${encodeURIComponent(a.materialFile)}`} target="_blank" rel="noopener noreferrer"
+                      <button type="button" onClick={() => downloadAssignmentFile((a.materialFile)!)}
                         className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-900/30 text-emerald-400 rounded hover:bg-emerald-900/40 transition-colors">
                         <FileText size={11} /> Materi
-                      </a>
+                      </button>
                     )}
                   </div>
                 </div>
@@ -406,10 +422,10 @@ function GuruAssignmentView() {
                   <p className="font-medium text-slate-100">{s.studentName} <span className="text-sm text-slate-500">({s.studentNis})</span></p>
                   <p className="text-xs text-slate-500">{new Date(s.createdAt).toLocaleString('id-ID')}</p>
                   {s.fileName && (
-                    <a href={`/api/assignment/files/${encodeURIComponent(s.filePath || s.fileName)}`} target="_blank" rel="noopener noreferrer"
+                    <button type="button" onClick={() => downloadAssignmentFile((s.filePath || s.fileName)!)}
                       className="text-xs text-primary-300 hover:text-primary-200 hover:underline flex items-center gap-1 mt-1">
                       <FileText size={12} /> {s.fileName}
-                    </a>
+                    </button>
                   )}
                   {s.notes && <p className="text-xs text-slate-400 mt-1">Catatan: {s.notes}</p>}
                 </div>
@@ -551,10 +567,10 @@ function SiswaAssignmentView() {
                   </div>
                   {a.materialFile && (
                     <div className="mt-2">
-                      <a href={`/api/assignment/files/${encodeURIComponent(a.materialFile)}`} target="_blank" rel="noopener noreferrer"
+                      <button type="button" onClick={() => downloadAssignmentFile((a.materialFile)!)}
                         className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-900/30 text-emerald-400 rounded text-xs hover:bg-emerald-900/40 transition-colors">
                         <FileText size={11} /> Materi
-                      </a>
+                      </button>
                     </div>
                   )}
                 </div>

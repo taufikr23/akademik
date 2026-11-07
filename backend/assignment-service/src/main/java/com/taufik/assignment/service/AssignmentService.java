@@ -27,6 +27,8 @@ public class AssignmentService {
     private final AssignmentRepository assignmentRepository;
     private final com.taufik.assignment.repository.SubmissionRepository submissionRepository;
     private final JdbcTemplate jdbcTemplate;
+    @org.springframework.beans.factory.annotation.Value("${siasek.database-uploads:false}")
+    private boolean databaseUploads;
 
     @Transactional
     public AssignmentResponse createAssignment(AssignmentRequest request) {
@@ -234,9 +236,15 @@ public class AssignmentService {
 
     public String uploadFile(MultipartFile file) {
         try {
+            String original = java.util.Objects.toString(file.getOriginalFilename(), "file").replace('\\', '/');
+            String base = original.substring(original.lastIndexOf('/') + 1);
+            String fileName = UUID.randomUUID() + "_" + base.substring(0, Math.min(180, base.length()));
+            if (databaseUploads) {
+                jdbcTemplate.update("INSERT INTO assignment_files (name, content) VALUES (?, ?)", fileName, file.getBytes());
+                return fileName;
+            }
             String uploadDir = getUploadDir();
             new File(uploadDir).mkdirs();
-            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
             java.nio.file.Path target = java.nio.file.Paths.get(uploadDir, fileName);
             java.nio.file.Files.copy(file.getInputStream(), target, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
             log.info("File uploaded to: {} ({} bytes)", target, file.getSize());
@@ -247,11 +255,18 @@ public class AssignmentService {
         }
     }
 
-    public java.io.File getFile(String fileName) {
+    public org.springframework.core.io.Resource getFile(String fileName) {
+        if (databaseUploads) {
+            byte[] bytes = jdbcTemplate.queryForObject("SELECT content FROM assignment_files WHERE name = ?", byte[].class, fileName);
+            return new org.springframework.core.io.ByteArrayResource(bytes);
+        }
+        if (fileName.contains("/") || fileName.contains("\\") || fileName.equals("..")) {
+            throw new IllegalArgumentException("Nama berkas tidak valid");
+        }
         String uploadDir = getUploadDir();
         java.io.File file = new java.io.File(uploadDir + "/" + fileName);
         if (!file.exists()) throw new RuntimeException("File tidak ditemukan: " + fileName);
-        return file;
+        return new org.springframework.core.io.FileSystemResource(file);
     }
 
     // STUDENT: Get assignments for their class

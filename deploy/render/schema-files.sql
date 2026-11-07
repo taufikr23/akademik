@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS assignment_files (
+    name VARCHAR(255) PRIMARY KEY,
+    content MEDIUMBLOB NOT NULL
+);

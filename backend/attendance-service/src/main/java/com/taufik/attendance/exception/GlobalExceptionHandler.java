@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.taufik.attendance", name = "attendanceExceptionHandler")
 @Slf4j
 public class GlobalExceptionHandler {
 
